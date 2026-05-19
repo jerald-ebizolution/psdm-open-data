@@ -1,26 +1,73 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState, type ReactElement } from "react";
 import {
   Bar,
   BarChart,
   CartesianGrid,
   LabelList,
   Legend,
+  Rectangle,
   ResponsiveContainer,
   XAxis,
   YAxis,
+  type BarShapeProps,
 } from "recharts";
 
 import { BarValueLabel } from "@/components/dashboard/bar-value-label";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   formatAxisValue,
   getYAxisMax,
   getYAxisTicks,
 } from "@/lib/regional-budget-data";
 
-const BAR_COLOR = "#2563eb";
 export const CHART_HEIGHT = 400;
+
+/** Column bars (grow upward) vs horizontal bars (grow rightward). */
+export type BarChartOrientation = "vertical" | "horizontal";
+
+const BAR_RADIUS: Record<BarChartOrientation, [number, number, number, number]> =
+  {
+    vertical: [4, 4, 0, 0],
+    horizontal: [0, 4, 4, 0],
+  };
+
+function toRechartsLayout(
+  orientation: BarChartOrientation,
+): "horizontal" | "vertical" {
+  return orientation === "horizontal" ? "vertical" : "horizontal";
+}
+
+function barFillColor(seed: string, index: number): string {
+  let hash = index;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+  }
+  const hue = hash % 360;
+  return `hsl(${hue} 62% 48%)`;
+}
+
+function coloredBarShape(
+  props: BarShapeProps,
+  xDataKey: string,
+  orientation: BarChartOrientation,
+): ReactElement {
+  const fill = barFillColor(
+    String(props.payload?.[xDataKey] ?? props.index),
+    props.index,
+  );
+  return (
+    <Rectangle {...props} fill={fill} radius={BAR_RADIUS[orientation]} />
+  );
+}
 
 type BudgetBarRechartProps = {
   data: Array<
@@ -28,8 +75,11 @@ type BudgetBarRechartProps = {
   >;
   xDataKey: string;
   chartKey: string;
-  xAxisAngle?: number;
-  xAxisHeight?: number;
+  /** Width reserved for category labels when bars are horizontal. */
+  categoryAxisWidth?: number;
+  /** Tilt category labels when bars are vertical (columns). */
+  categoryAxisAngle?: number;
+  defaultOrientation?: BarChartOrientation;
   legendLabel?: string;
 };
 
@@ -37,75 +87,150 @@ export function BudgetBarRechart({
   data,
   xDataKey,
   chartKey,
-  xAxisAngle = 0,
-  xAxisHeight = 32,
+  categoryAxisWidth = 140,
+  categoryAxisAngle = 0,
+  defaultOrientation = "horizontal",
   legendLabel = "Budget allocation (₱M)",
 }: BudgetBarRechartProps) {
-  const yMax = useMemo(() => getYAxisMax(data), [data]);
-  const yTicks = useMemo(() => getYAxisTicks(yMax), [yMax]);
-    // console.log(yTicks, "yTicks")
-    // console.log(yMax, "yMax")
+  const [orientation, setOrientation] =
+    useState<BarChartOrientation>(defaultOrientation);
+
+  const isHorizontal = orientation === "horizontal";
+  const valueMax = useMemo(() => getYAxisMax(data), [data]);
+  const valueTicks = useMemo(() => getYAxisTicks(valueMax), [valueMax]);
+  const chartHeight = useMemo(
+    () =>
+      isHorizontal
+        ? Math.max(CHART_HEIGHT, data.length * 36 + 80)
+        : CHART_HEIGHT,
+    [data.length, isHorizontal],
+  );
+  const barShape = useMemo(
+    () => (props: BarShapeProps) =>
+      coloredBarShape(props, xDataKey, orientation),
+    [xDataKey, orientation],
+  );
+
   return (
-    <div
-      key={chartKey}
-      className="w-full animate-in fade-in duration-500"
-      style={{ height: CHART_HEIGHT }}
-    >
-      <ResponsiveContainer width="100%" height={CHART_HEIGHT}>
-        <BarChart
-          data={data}
-          margin={{
-            top: 32,
-            right: 12,
-            left: 8,
-            bottom: xAxisAngle ? 48 : 24,
-          }}
-          barCategoryGap="18%"
+    <div className="flex w-full flex-col gap-3">
+      <div className="flex flex-col gap-2 sm:ml-auto sm:max-w-[220px]">
+        <Label htmlFor={`${chartKey}-bar-orientation`}>Bar orientation</Label>
+        <Select
+          value={orientation}
+          onValueChange={(value) =>
+            setOrientation(value as BarChartOrientation)
+          }
         >
-          <CartesianGrid strokeDasharray="0" stroke="#e5e7eb" vertical={false} />
-          <XAxis
-            dataKey={xDataKey}
-            tickLine={false}
-            axisLine={{ stroke: "#e5e7eb" }}
-            tick={{ fill: "#6b7280", fontSize: 9 }}
-            interval={0}
-            angle={xAxisAngle}
-            textAnchor={xAxisAngle ? "end" : "middle"}
-            height={xAxisHeight}
-          />
-          <YAxis
-            tickLine={false}
-            axisLine={false}
-            ticks={yTicks}
-            domain={[0, yMax]}
-            tickFormatter={formatAxisValue}
-            tick={{ fill: "#6b7280", fontSize: 11 }}
-            width={56}
-          />
-          <Legend
-            verticalAlign="bottom"
-            align="left"
-            iconType="square"
-            iconSize={10}
-            wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
-          />
-          <Bar
-            name={legendLabel}
-            dataKey="value"
-            fill={BAR_COLOR}
-            radius={[4, 4, 0, 0]}
-            animationDuration={600}
-            animationEasing="ease-out"
-            maxBarSize={40}
+          <SelectTrigger
+            id={`${chartKey}-bar-orientation`}
+            className="w-full"
           >
-            <LabelList
-              dataKey="label"
-              content={<BarValueLabel />}
-              position="top"
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="horizontal">Horizontal</SelectItem>
+            <SelectItem value="vertical">Vertical</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div
+        key={`${chartKey}-${orientation}`}
+        className="w-full animate-in fade-in duration-500"
+        style={{ height: chartHeight }}
+      >
+        <ResponsiveContainer width="100%" height={chartHeight}>
+          <BarChart
+            layout={toRechartsLayout(orientation)}
+            data={data}
+            margin={
+              isHorizontal
+                ? { top: 16, right: 24, left: 8, bottom: 24 }
+                : {
+                    top: 32,
+                    right: 12,
+                    left: 8,
+                    bottom: categoryAxisAngle ? 48 : 24,
+                  }
+            }
+            barCategoryGap="18%"
+          >
+            <CartesianGrid
+              strokeDasharray="0"
+              stroke="#e5e7eb"
+              horizontal={!isHorizontal}
+              vertical={isHorizontal}
             />
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+            {isHorizontal ? (
+              <>
+                <XAxis
+                  type="number"
+                  tickLine={false}
+                  axisLine={{ stroke: "#e5e7eb" }}
+                  ticks={valueTicks}
+                  domain={[0, valueMax]}
+                  tickFormatter={formatAxisValue}
+                  tick={{ fill: "#6b7280", fontSize: 11 }}
+                  height={32}
+                />
+                <YAxis
+                  type="category"
+                  dataKey={xDataKey}
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fill: "#6b7280", fontSize: 9 }}
+                  width={categoryAxisWidth}
+                />
+              </>
+            ) : (
+              <>
+                <XAxis
+                  dataKey={xDataKey}
+                  tickLine={false}
+                  axisLine={{ stroke: "#e5e7eb" }}
+                  tick={{ fill: "#6b7280", fontSize: 9 }}
+                  interval={0}
+                  angle={categoryAxisAngle}
+                  textAnchor={categoryAxisAngle ? "end" : "middle"}
+                  height={categoryAxisAngle ? 72 : 32}
+                />
+                <YAxis
+                  tickLine={false}
+                  axisLine={false}
+                  ticks={valueTicks}
+                  domain={[0, valueMax]}
+                  tickFormatter={formatAxisValue}
+                  tick={{ fill: "#6b7280", fontSize: 11 }}
+                  width={56}
+                />
+              </>
+            )}
+            <Legend
+              verticalAlign="bottom"
+              align="left"
+              iconType="square"
+              iconSize={10}
+              wrapperStyle={{ paddingTop: 16, fontSize: 12 }}
+            />
+            <Bar
+              name={legendLabel}
+              dataKey="value"
+              shape={barShape}
+              animationDuration={600}
+              animationEasing="ease-out"
+              maxBarSize={isHorizontal ? 28 : 40}
+            >
+              <LabelList
+                dataKey="label"
+                content={(props) => (
+                  <BarValueLabel {...props} orientation={orientation} />
+                )}
+                position={isHorizontal ? "right" : "top"}
+              />
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 }

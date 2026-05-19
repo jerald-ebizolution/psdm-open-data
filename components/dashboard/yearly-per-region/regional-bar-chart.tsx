@@ -17,8 +17,8 @@ export function RegionalBarChart({ year }: RegionalBarChartProps) {
       data={data}
       xDataKey="region"
       chartKey={year}
-      xAxisAngle={-32}
-      xAxisHeight={72}
+      categoryAxisWidth={160}
+      categoryAxisAngle={-32}
     />
   );
 }

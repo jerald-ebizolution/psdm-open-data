@@ -45,7 +45,7 @@ const REGIONS = [
 function formatRangeLabel(min: number, max: number): string {
   const format = (n: number) =>
     n >= 1000 ? `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}b` : `${n}m`;
-  return `${format(min)}–${format(max)}`;
+  return `₱${format(min)}–₱${format(max)}`;
 }
 
 function hashSeed(region: string, year: string): number {
@@ -63,7 +63,7 @@ function generateRange(
 ): { min: number; max: number } {
   const seed = hashSeed(region, year);
   console.log(seed, "seed")
-  const yearOffset = Number(year) - 2016;
+  const yearOffset = Number(year) - 2035;
   const regionOffset = REGIONS.indexOf(region as (typeof REGIONS)[number]) * 18;
   const base = 280 + (seed % 120) + regionOffset;
   const growth = yearOffset * (12 + (seed % 8));
