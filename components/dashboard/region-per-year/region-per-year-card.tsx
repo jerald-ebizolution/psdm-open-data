@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 
-import { RegionalBarChart } from "@/components/dashboard/regional-bar-chart";
+import { RegionPerYearChart } from "@/components/dashboard/region-per-year/region-per-year-chart";
 import {
   Card,
   CardContent,
@@ -19,41 +19,41 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  getAvailableYears,
-  getLatestYear,
-  getRegionsForYear,
+  getAvailableRegions,
+  getLastNYears,
+  YEAR_WINDOW,
 } from "@/lib/regional-budget-data";
 
-export function YearlyPerRegionCard() {
-  const years = getAvailableYears();
-  const [year, setYear] = useState(getLatestYear());
-  const regions = useMemo(() => getRegionsForYear(year), [year]);
+export function RegionPerYearCard() {
+  const regions = getAvailableRegions();
+  const [region, setRegion] = useState(regions[0] ?? "");
+  const years = useMemo(() => getLastNYears(), []);
 
   return (
     <Card className="border-border/80 bg-card shadow-sm">
       <CardHeader className="gap-4 border-b border-border/60 pb-4">
         <div className="space-y-1">
           <CardTitle className="text-lg font-semibold tracking-tight sm:text-xl">
-            Yearly Per Region
+            Region per Year
           </CardTitle>
           <CardDescription>
-            Budget allocation ranges across regions for {year}. Showing{" "}
-            {regions.length} region{regions.length === 1 ? "" : "s"}. Values in
-            Philippine Pesos (millions).
+            Budget allocation ranges for {region} over the last {YEAR_WINDOW}{" "}
+            years ({years[0]}–{years[years.length - 1]}). Values in Philippine
+            Pesos (millions).
           </CardDescription>
         </div>
 
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
-          <div className="flex w-full flex-col gap-2 sm:max-w-[220px]">
-            <Label htmlFor="year-filter">Filter by Year</Label>
-            <Select value={year} onValueChange={setYear}>
-              <SelectTrigger id="year-filter" className="w-full">
-                <SelectValue placeholder="Select year" />
+          <div className="flex w-full flex-col gap-2 sm:max-w-[280px]">
+            <Label htmlFor="region-filter">Filter by Region</Label>
+            <Select value={region} onValueChange={setRegion}>
+              <SelectTrigger id="region-filter" className="w-full">
+                <SelectValue placeholder="Select region" />
               </SelectTrigger>
               <SelectContent>
-                {years.map((y) => (
-                  <SelectItem key={y} value={y}>
-                    {y}
+                {regions.map((r) => (
+                  <SelectItem key={r} value={r}>
+                    {r}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -64,7 +64,7 @@ export function YearlyPerRegionCard() {
 
       <CardContent className="pt-2 pb-6">
         <div className="w-full min-w-0">
-          <RegionalBarChart year={year} />
+          <RegionPerYearChart region={region} />
         </div>
       </CardContent>
     </Card>

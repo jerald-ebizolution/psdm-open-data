@@ -25,9 +25,9 @@ export function BarValueLabel(props: BarLabelProps) {
     <text
       x={Number(x) + Number(width) / 2}
       y={Number(y) - 10}
-      fill="#111827"
+      fill="6b7280"
       textAnchor="middle"
-      className="text-[11px] font-semibold sm:text-xs"
+      className="text-[11px] font-semibold sm:text-[9px]"
     >
       {label}
     </text>

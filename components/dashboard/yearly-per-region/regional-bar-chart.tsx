@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 
-import { BudgetBarChart } from "@/components/dashboard/budget-bar-chart";
+import { BudgetBarRechart } from "@/components/dashboard/budget-bar-rechart";
 import { getChartDataByYear } from "@/lib/regional-budget-data";
 
 type RegionalBarChartProps = {
@@ -11,9 +11,9 @@ type RegionalBarChartProps = {
 
 export function RegionalBarChart({ year }: RegionalBarChartProps) {
   const data = useMemo(() => getChartDataByYear(year), [year]);
-
+  console.log(data, "data")
   return (
-    <BudgetBarChart
+    <BudgetBarRechart
       data={data}
       xDataKey="region"
       chartKey={year}

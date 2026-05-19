@@ -22,15 +22,24 @@ type RawBudgetRecord = {
 export const YEAR_WINDOW = 10;
 
 const REGIONS = [
-  "Region I",
-  "Region II",
-  "Region III",
-  "Region IV",
-  "Region V",
-  "Region VI (Caraga)",
-  "Region VII (Davao)",
-  "Region VIII",
-  "Region IX (Zamboanga Peninsula)",
+  "Region I – Ilocos Region",
+  "Region II – Cagayan Valley",
+  "Region III – Central Luzon",
+  "Region IV‑A – CALABARZON",
+  "MIMAROPA Region",
+  "Region V – Bicol Region",
+  "Region VI – Western Visayas",
+  "Region VII – Central Visayas",
+  "Region VIII – Eastern Visayas",
+  "Region IX – Zamboanga Peninsula",
+  "Region X – Northern Mindanao",
+  "Region XI – Davao Region",
+  "Region XII – SOCCSKSARGEN",
+  "Region XIII – Caraga",
+  "NCR – National Capital Region",
+  "CAR – Cordillera Administrative Region",
+  "BARMM – Bangsamoro Autonomous Region in Muslim Mindanao",
+  "NIR – Negros Island Region",
 ] as const;
 
 function formatRangeLabel(min: number, max: number): string {
@@ -53,6 +62,7 @@ function generateRange(
   year: string
 ): { min: number; max: number } {
   const seed = hashSeed(region, year);
+  console.log(seed, "seed")
   const yearOffset = Number(year) - 2016;
   const regionOffset = REGIONS.indexOf(region as (typeof REGIONS)[number]) * 18;
   const base = 280 + (seed % 120) + regionOffset;
@@ -64,12 +74,13 @@ function generateRange(
 }
 
 function buildRecords(): RawBudgetRecord[] {
-  const latestYear = 2025;
+  const latestYear = new Date().getFullYear();
   const startYear = latestYear - YEAR_WINDOW + 1;
   const records: RawBudgetRecord[] = [];
 
   for (let year = startYear; year <= latestYear; year++) {
     for (const region of REGIONS) {
+      console.log(region, year)
       const { min, max } = generateRange(region, String(year));
       records.push({ year: String(year), region, min, max });
     }
@@ -97,7 +108,7 @@ export function getLastNYears(count = YEAR_WINDOW): string[] {
 }
 
 export function getAvailableRegions(): string[] {
-  return [...new Set(budgetRecords.map((r) => r.region))].sort();
+  return [...new Set(budgetRecords.map((r) => r.region))];
 }
 
 export function getRegionsForYear(year: string): string[] {

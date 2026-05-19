@@ -22,7 +22,7 @@ import {
 const BAR_COLOR = "#2563eb";
 export const CHART_HEIGHT = 400;
 
-type BudgetBarChartProps = {
+type BudgetBarRechartProps = {
   data: Array<
     { label: string; value: number; max: number } & Record<string, string | number>
   >;
@@ -33,17 +33,18 @@ type BudgetBarChartProps = {
   legendLabel?: string;
 };
 
-export function BudgetBarChart({
+export function BudgetBarRechart({
   data,
   xDataKey,
   chartKey,
   xAxisAngle = 0,
   xAxisHeight = 32,
   legendLabel = "Budget allocation (₱M)",
-}: BudgetBarChartProps) {
+}: BudgetBarRechartProps) {
   const yMax = useMemo(() => getYAxisMax(data), [data]);
   const yTicks = useMemo(() => getYAxisTicks(yMax), [yMax]);
-
+    // console.log(yTicks, "yTicks")
+    // console.log(yMax, "yMax")
   return (
     <div
       key={chartKey}
@@ -66,7 +67,7 @@ export function BudgetBarChart({
             dataKey={xDataKey}
             tickLine={false}
             axisLine={{ stroke: "#e5e7eb" }}
-            tick={{ fill: "#6b7280", fontSize: 11 }}
+            tick={{ fill: "#6b7280", fontSize: 9 }}
             interval={0}
             angle={xAxisAngle}
             textAnchor={xAxisAngle ? "end" : "middle"}
@@ -95,7 +96,7 @@ export function BudgetBarChart({
             radius={[4, 4, 0, 0]}
             animationDuration={600}
             animationEasing="ease-out"
-            maxBarSize={48}
+            maxBarSize={40}
           >
             <LabelList
               dataKey="label"
