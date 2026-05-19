@@ -47,26 +47,27 @@ function toRechartsLayout(
   return orientation === "horizontal" ? "vertical" : "horizontal";
 }
 
-function barFillColor(seed: string, index: number): string {
-  let hash = index;
-  for (let i = 0; i < seed.length; i++) {
-    hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
-  }
-  const hue = hash % 360;
-  return `hsl(${hue} 62% 48%)`;
-}
+// function barFillColor(seed: string, index: number): string {
+//   let hash = index;
+//   for (let i = 0; i < seed.length; i++) {
+//     hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+//   }
+//   const hue = hash % 360;
+//   return `hsl(${hue} 62% 48%)`;
+// }
 
 function coloredBarShape(
   props: BarShapeProps,
-  xDataKey: string,
+  _xDataKey: string,
   orientation: BarChartOrientation,
 ): ReactElement {
-  const fill = barFillColor(
-    String(props.payload?.[xDataKey] ?? props.index),
-    props.index,
-  );
+  // console.log(props, "props")
+  // const fill = barFillColor(
+  //   String(props.payload?.[xDataKey] ?? props.index),
+  //   props.index,
+  // );
   return (
-    <Rectangle {...props} fill={fill} radius={BAR_RADIUS[orientation]} />
+    <Rectangle {...props} fill={props.payload?.color as string} radius={BAR_RADIUS[orientation]} />
   );
 }
 
@@ -158,7 +159,7 @@ export function BudgetBarRechart({
           >
             <Tooltip
               cursor={<Rectangle fill="rgba(0, 0, 0, 0.1)" />}
-              formatter={(value, payload, item) => {
+              formatter={(_value, _payload, item) => {
                 return (
                   <span>{formatAxisValue(item?.payload?.min as number)} - {formatAxisValue(item?.payload.max as number)}</span>
                 )

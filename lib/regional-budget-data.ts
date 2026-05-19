@@ -17,6 +17,7 @@ type RawBudgetRecord = {
   region: string;
   min: number;
   max: number;
+  color: string;
 };
 
 export const YEAR_WINDOW = 10;
@@ -94,11 +95,27 @@ function buildRecords(): RawBudgetRecord[] {
   const startYear = latestYear - YEAR_WINDOW + 1;
   const records: RawBudgetRecord[] = [];
 
+  // // Helper to generate a random hex color in the form "#RRGGBB"
+  function randomColor() {
+    // Generates bright, visually distinct colors
+    const hue = Math.floor(Math.random() * 360);
+    return `hsl(${hue},62%,48%)`;
+  }
+
   for (let year = startYear; year <= latestYear; year++) {
     for (const region of REGIONS) {
-      console.log(region, year)
       const { min, max } = generateRange(region, String(year));
-      records.push({ year: String(year), region, min, max });
+      // Use a deterministic color based on region, for consistency per region
+      let colorSeed = 0;
+      const seedKey = `${region}`;
+      for (let i = 0; i < seedKey.length; i++) {
+        colorSeed = (colorSeed * 31 + seedKey.charCodeAt(i)) >>> 0;
+      }
+      // Seeded HSL color
+      // const hue = colorSeed % 360;
+      const color = randomColor();
+
+      records.push({ year: String(year), region, min, max, color });
     }
   }
 
@@ -136,11 +153,12 @@ export function getRegionsForYear(year: string): string[] {
 export function getBudgetForYear(year: string): RegionalBudgetEntry[] {
   return budgetRecords
     .filter((r) => r.year === year)
-    .map(({ region, min, max }) => ({
+    .map(({ region, min, max, color }) => ({
       region,
       min,
       max,
       label: formatRangeLabel(min, max),
+      color,
     }));
 }
 
@@ -152,11 +170,12 @@ export function getBudgetForRegion(
   return budgetRecords
     .filter((r) => r.region === region && yearSet.has(r.year))
     .sort((a, b) => a.year.localeCompare(b.year))
-    .map(({ year, min, max }) => ({
+    .map(({ year, min, max, color }) => ({
       year,
       min,
       max,
       label: formatRangeLabel(min, max),
+      color,
     }));
 }
 
