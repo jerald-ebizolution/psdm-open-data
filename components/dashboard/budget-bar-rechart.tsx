@@ -9,6 +9,7 @@ import {
   Legend,
   Rectangle,
   ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
   type BarShapeProps,
@@ -35,10 +36,10 @@ export const CHART_HEIGHT = 400;
 export type BarChartOrientation = "vertical" | "horizontal";
 
 const BAR_RADIUS: Record<BarChartOrientation, [number, number, number, number]> =
-  {
-    vertical: [4, 4, 0, 0],
-    horizontal: [0, 4, 4, 0],
-  };
+{
+  vertical: [4, 4, 0, 0],
+  horizontal: [0, 4, 4, 0],
+};
 
 function toRechartsLayout(
   orientation: BarChartOrientation,
@@ -113,7 +114,7 @@ export function BudgetBarRechart({
 
   return (
     <div className="flex w-full flex-col gap-3">
-      <div className="flex flex-col gap-2 sm:ml-auto sm:max-w-[220px]">
+      <div className="flex flex-col gap-2 sm:mr-auto sm:max-w-[220px]">
         <Label htmlFor={`${chartKey}-bar-orientation`}>Bar orientation</Label>
         <Select
           value={orientation}
@@ -143,18 +144,26 @@ export function BudgetBarRechart({
           <BarChart
             layout={toRechartsLayout(orientation)}
             data={data}
-            margin={
-              isHorizontal
-                ? { top: 16, right: 24, left: 8, bottom: 24 }
-                : {
-                    top: 32,
-                    right: 12,
-                    left: 8,
-                    bottom: categoryAxisAngle ? 48 : 24,
-                  }
-            }
+            // margin={
+            //   isHorizontal
+            //     ? { top: 16, right: 24, left: 8, bottom: 24 }
+            //     : {
+            //         top: 32,
+            //         right: 12,
+            //         left: 8,
+            //         bottom: categoryAxisAngle ? 48 : 24,
+            //       }
+            // }
             barCategoryGap="18%"
           >
+            <Tooltip
+              cursor={<Rectangle fill="rgba(0, 0, 0, 0.1)" />}
+              formatter={(value, payload, item) => {
+                return (
+                  <span>{formatAxisValue(item?.payload?.min as number)} - {formatAxisValue(item?.payload.max as number)}</span>
+                )
+              }}
+            />
             <CartesianGrid
               strokeDasharray="0"
               stroke="#e5e7eb"

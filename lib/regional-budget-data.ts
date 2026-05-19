@@ -48,29 +48,45 @@ function formatRangeLabel(min: number, max: number): string {
   return `₱${format(min)}–₱${format(max)}`;
 }
 
-function hashSeed(region: string, year: string): number {
+// function hashSeed(region: string, year: string): number {
+//   const key = `${region}:${year}`;
+//   let hash = 0;
+//   for (let i = 0; i < key.length; i++) {
+//     hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
+//   }
+//   return hash;
+// }
+
+/**
+ * Generate a random pattern for budget values based on region and year.
+ * This uses a seeded PRNG for determinism (region+year).
+ */
+function generateRange(
+  region: string,
+  year: string
+): { min: number; max: number } {
+  // Create a simple deterministic hash based on region & year
   const key = `${region}:${year}`;
   let hash = 0;
   for (let i = 0; i < key.length; i++) {
     hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
   }
-  return hash;
-}
 
-function generateRange(
-  region: string,
-  year: string
-): { min: number; max: number } {
-  const seed = hashSeed(region, year);
-  console.log(seed, "seed")
-  const yearOffset = Number(year) - 2035;
-  const regionOffset = REGIONS.indexOf(region as (typeof REGIONS)[number]) * 18;
-  const base = 280 + (seed % 120) + regionOffset;
-  const growth = yearOffset * (12 + (seed % 8));
-  const min = Math.min(base + growth, 880);
-  const span = 120 + (seed % 160);
-  const max = Math.min(min + span, 1000);
-  return { min, max: Math.max(max, min + 80) };
+  function seededRand(range: number, offset = 0): number {
+    // Mulberry32 like PRNG with hash as seed
+    let t = hash + offset;
+    t = (t ^ (t >>> 15)) * (1 | t);
+    t = (t + (t << 13)) ^ t;
+    t = (t ^ (t >>> 7)) ^ t;
+    return Math.abs(t % range);
+  }
+
+  // Set reasonable minimum and maximum range values
+  const min = 220 + seededRand(600, 17); // from 220 up to 819
+  // Allow max to be a bit above min, with spacing at least 80 up to 180
+  const max = Math.max(min + 80, Math.min(1000, min + seededRand(100, 31) + 80));
+
+  return { min, max };
 }
 
 function buildRecords(): RawBudgetRecord[] {
