@@ -228,6 +228,7 @@ export function BudgetBarRechart({
               shape={barShape}
               animationDuration={600}
               animationEasing="ease-out"
+              activeBar={{ fill: '#5470c6', stroke: '#5470c6' }}
             // maxBarSize={isHorizontal ? 200 : 100}
             >
               <LabelList
