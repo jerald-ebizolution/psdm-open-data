@@ -14,7 +14,7 @@ export function RegionPerYearChart({ region }: RegionPerYearChartProps) {
 
   return (
     <BudgetBarRechart
-    defaultOrientation="vertical"
+      defaultOrientation="vertical"
       data={data}
       xDataKey="year"
       chartKey={region}

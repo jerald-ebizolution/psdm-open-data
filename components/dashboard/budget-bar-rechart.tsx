@@ -196,7 +196,7 @@ export function BudgetBarRechart({
               <>
                 <XAxis
                   dataKey={xDataKey}
-                  tickLine={false}
+                  // tickLine={false}
                   axisLine={{ stroke: "#e5e7eb" }}
                   tick={{ fill: "#6b7280", fontSize: 9 }}
                   interval={0}
@@ -205,10 +205,10 @@ export function BudgetBarRechart({
                   height={categoryAxisAngle ? 72 : 32}
                 />
                 <YAxis
-                  tickLine={false}
-                  axisLine={false}
+                  // tickLine={false}
+                  // axisLine={false}
                   ticks={valueTicks}
-                  domain={[0, valueMax]}
+                  // domain={[0, valueMax]}
                   tickFormatter={formatAxisValue}
                   tick={{ fill: "#6b7280", fontSize: 11 }}
                   width={56}
@@ -228,7 +228,7 @@ export function BudgetBarRechart({
               shape={barShape}
               animationDuration={600}
               animationEasing="ease-out"
-              maxBarSize={isHorizontal ? 28 : 40}
+              // maxBarSize={isHorizontal ? 200 : 100}
             >
               <LabelList
                 dataKey="label"

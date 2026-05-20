@@ -14,6 +14,7 @@ export function RegionalBarChart({ year }: RegionalBarChartProps) {
   console.log(data, "data")
   return (
     <BudgetBarRechart
+      defaultOrientation="vertical"
       data={data}
       xDataKey="region"
       chartKey={year}
