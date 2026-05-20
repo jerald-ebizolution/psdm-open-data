@@ -2,8 +2,9 @@
 
 import { useMemo } from "react";
 
-import { BudgetBarRechart } from "@/components/dashboard/budget-bar-rechart";
 import { getChartDataByYear } from "@/lib/regional-budget-data";
+import { BudgetBarRechart } from "@/components/dashboard/budget-bar-rechart";
+// import BudgetBarEchart from "../budget-bar-echart";
 
 type RegionalBarChartProps = {
   year: string;
@@ -11,7 +12,6 @@ type RegionalBarChartProps = {
 
 export function RegionalBarChart({ year }: RegionalBarChartProps) {
   const data = useMemo(() => getChartDataByYear(year), [year]);
-  console.log(data, "data")
   return (
     <BudgetBarRechart
       defaultOrientation="vertical"
@@ -21,5 +21,13 @@ export function RegionalBarChart({ year }: RegionalBarChartProps) {
       categoryAxisWidth={160}
       categoryAxisAngle={-32}
     />
+    // <BudgetBarEchart
+    //   data={data}
+    //   defaultOrientation="vertical"
+    //   xDataKey="region"
+    //   chartKey={year}
+    //   categoryAxisWidth={160}
+    //   categoryAxisAngle={-32}
+    // />
   );
 }

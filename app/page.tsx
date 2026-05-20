@@ -2,13 +2,14 @@ import { RegionPerYearCard } from "@/components/dashboard/region-per-year/region
 import { YearlyPerRegionCard } from "@/components/dashboard/yearly-per-region/yearly-per-region-card";
 import Image from "next/image";
 
-export default function Home() {
+export default async function Home() {
+
   return (
     <div className="min-h-full bg-[#f4f5f7]">
       <header className="border-b border-border/70 bg-white">
         <div className="mx-auto flex max-w-9xl flex-col gap-1 px-4 py-5 sm:px-6 lg:px-8">
           <p className="flex items-center gap-3 text-md font-medium tracking-wide text-muted-foreground uppercase">
-           <Image src="/philgeps-logo.png" alt="PSDBM Logo" width={150} height={150} /> PSDBM Open Data Portal
+            <Image src="/philgeps-logo.png" alt="PSDBM Logo" width={150} height={150} /> PSDBM Open Data Portal
           </p>
           {/* <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
             Regional Budget Dashboard

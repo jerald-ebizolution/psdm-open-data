@@ -5,6 +5,7 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  Label,
   LabelList,
   Legend,
   Rectangle,
@@ -15,8 +16,7 @@ import {
   type BarShapeProps,
 } from "recharts";
 
-import { BarValueLabel } from "@/components/dashboard/bar-value-label";
-import { Label } from "@/components/ui/label";
+import { Label as LabelComponent } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -26,8 +26,8 @@ import {
 } from "@/components/ui/select";
 import {
   formatAxisValue,
-  getYAxisMax,
-  getYAxisTicks,
+  // getYAxisMax,
+  // getYAxisTicks,
 } from "@/lib/regional-budget-data";
 
 export const CHART_HEIGHT = 400;
@@ -98,8 +98,8 @@ export function BudgetBarRechart({
     useState<BarChartOrientation>(defaultOrientation);
 
   const isHorizontal = orientation === "horizontal";
-  const valueMax = useMemo(() => getYAxisMax(data), [data]);
-  const valueTicks = useMemo(() => getYAxisTicks(valueMax), [valueMax]);
+  // const valueMax = useMemo(() => getYAxisMax(data), [data]);
+  // const valueTicks = useMemo(() => getYAxisTicks(valueMax), [valueMax]);
   const chartHeight = useMemo(
     () =>
       isHorizontal
@@ -116,7 +116,7 @@ export function BudgetBarRechart({
   return (
     <div className="flex w-full flex-col gap-3">
       <div className="flex flex-col gap-2 sm:mr-auto sm:max-w-[220px]">
-        <Label htmlFor={`${chartKey}-bar-orientation`}>Bar orientation</Label>
+        <LabelComponent htmlFor={`${chartKey}-bar-orientation`}>Bar orientation</LabelComponent>
         <Select
           value={orientation}
           onValueChange={(value) =>
@@ -175,10 +175,10 @@ export function BudgetBarRechart({
               <>
                 <XAxis
                   type="number"
-                  tickLine={false}
-                  axisLine={{ stroke: "#e5e7eb" }}
-                  ticks={valueTicks}
-                  domain={[0, valueMax]}
+                  // tickLine={false}
+                  // axisLine={{ stroke: "#e5e7eb" }}
+                  // // ticks={valueTicks}
+                  // domain={[0, valueMax]}
                   tickFormatter={formatAxisValue}
                   tick={{ fill: "#6b7280", fontSize: 11 }}
                   height={32}
@@ -207,7 +207,7 @@ export function BudgetBarRechart({
                 <YAxis
                   // tickLine={false}
                   // axisLine={false}
-                  ticks={valueTicks}
+                  // ticks={valueTicks}
                   // domain={[0, valueMax]}
                   tickFormatter={formatAxisValue}
                   tick={{ fill: "#6b7280", fontSize: 11 }}
@@ -228,13 +228,19 @@ export function BudgetBarRechart({
               shape={barShape}
               animationDuration={600}
               animationEasing="ease-out"
-              // maxBarSize={isHorizontal ? 200 : 100}
+            // maxBarSize={isHorizontal ? 200 : 100}
             >
               <LabelList
                 dataKey="label"
-                content={(props) => (
-                  <BarValueLabel {...props} orientation={orientation} />
-                )}
+                content={(props) => {
+                  return (
+                    <Label
+                      {...props}
+                      // fill={data[props.index ?? 0].color as string}
+                      className="text-[6px] font-semibold sm:text-[12px]"
+                    />
+                  )
+                }}
                 position={isHorizontal ? "right" : "top"}
               />
             </Bar>

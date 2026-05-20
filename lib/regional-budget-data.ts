@@ -43,10 +43,30 @@ const REGIONS = [
   "NIR – Negros Island Region",
 ] as const;
 
+const MILLION = 1_000_000;
+const BILLION = 1_000_000_000;
+
+function formatCompactAmount(
+  amount: number,
+  units: "lower" | "upper"
+): string {
+  const m = units === "lower" ? "m" : "M";
+  const b = units === "lower" ? "b" : "B";
+
+  if (amount >= BILLION) {
+    const billions = amount / BILLION;
+    const value =
+      billions % 1 === 0 ? `${billions}` : `${billions.toFixed(1)}`;
+    return `${value}${b}`;
+  }
+
+  const millions = amount / MILLION;
+  const value = millions % 1 === 0 ? `${millions}` : `${millions.toFixed(1)}`;
+  return `${value}${m}`;
+}
+
 function formatRangeLabel(min: number, max: number): string {
-  const format = (n: number) =>
-    n >= 1000 ? `${(n / 1000).toFixed(n % 1000 === 0 ? 0 : 1)}b` : `${n}m`;
-  return `₱${format(min)}–₱${format(max)}`;
+  return `₱${formatCompactAmount(min, "lower")}–₱${formatCompactAmount(max, "lower")}`;
 }
 
 // function hashSeed(region: string, year: string): number {
@@ -82,12 +102,17 @@ function generateRange(
     return Math.abs(t % range);
   }
 
-  // Set reasonable minimum and maximum range values
-  const min = 220 + seededRand(600, 17); // from 220 up to 819
-  // Allow max to be a bit above min, with spacing at least 80 up to 180
-  const max = Math.max(min + 80, Math.min(1000, min + seededRand(100, 31) + 80));
+  // Budget ranges in pesos (roughly ₱220M–₱1B per region/year)
+  const minMillions = 220 + seededRand(600, 17);
+  const maxMillions = Math.max(
+    minMillions + 80,
+    Math.min(1000, minMillions + seededRand(100, 31) + 80)
+  );
 
-  return { min, max };
+  return {
+    min: minMillions * MILLION,
+    max: maxMillions * MILLION,
+  };
 }
 
 function buildRecords(): RawBudgetRecord[] {
@@ -198,11 +223,18 @@ export function getYAxisMax(
   paddingRatio = 0.1
 ): number {
   const peak = entries.reduce((max, item) => Math.max(max, item.max), 0);
-  return Math.ceil((peak * (1 + paddingRatio)) / 100) * 100;
+  const padded = peak * (1 + paddingRatio);
+
+  if (padded >= BILLION) {
+    return Math.ceil(padded / (100 * MILLION)) * (100 * MILLION);
+  }
+
+  return Math.ceil(padded / (50 * MILLION)) * (50 * MILLION);
 }
 
 export function getYAxisTicks(max: number): number[] {
-  const step = max <= 600 ? 100 : 200;
+  const step =
+    max >= BILLION ? 200 * MILLION : max >= 500 * MILLION ? 100 * MILLION : 50 * MILLION;
   const ticks: number[] = [];
   for (let v = 0; v <= max; v += step) {
     ticks.push(v);
@@ -214,11 +246,7 @@ export function getYAxisTicks(max: number): number[] {
 }
 
 export function formatAxisValue(value: number): string {
-  if (value >= 1000) {
-    const billions = value / 1000;
-    return billions % 1 === 0 ? `₱${billions}B` : `₱${billions.toFixed(1)}B`;
-  }
-  return `₱${value}M`;
+  return `₱${formatCompactAmount(value, "upper")}`;
 }
 
 // Back-compat for existing imports
