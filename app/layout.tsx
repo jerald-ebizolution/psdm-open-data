@@ -4,7 +4,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
 
 export const metadata: Metadata = {
-  title: "Open Data — Regional Budget Dashboard",
+  title: "PSDBM Open Data Portal",
   description:
     "Explore yearly regional budget allocation data across the Philippines.",
 };

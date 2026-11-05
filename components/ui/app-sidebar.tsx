@@ -3,7 +3,6 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
@@ -14,7 +13,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
 import { SIDEBAR_DATA } from "@/lib/side-bar-menus"
-import { ChevronRight, User2 } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import { usePathname } from 'next/navigation'
 import Image from "next/image"
 import Link from 'next/link'
@@ -36,7 +35,7 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <p className="flex items-center gap-3 text-md font-medium tracking-wide text-muted-foreground uppercase ">
               <Image src="/philgeps-logo.png" alt="PSDBM Logo" width={70} height={70} />
-              PSDBM Open Data Portal
+              PSDBM Open Data
             </p>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -144,7 +143,7 @@ export function AppSidebar() {
         }
 
       </SidebarContent>
-      <SidebarFooter>
+      {/* <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton>
@@ -152,7 +151,7 @@ export function AppSidebar() {
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
-      </SidebarFooter>
+      </SidebarFooter> */}
     </Sidebar>
   )
 }
