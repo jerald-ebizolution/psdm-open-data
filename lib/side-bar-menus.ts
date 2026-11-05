@@ -118,13 +118,28 @@ export const SIDEBAR_DATA: {
                 icon: FileJsonIcon,
                 subItems: [
                   {
-                    title: 'Sub Sub Menu 1',
-                    url: '/ocds/red-flags/sub-sub-menu-1',
+                    title: 'R003',
+                    url: '/ocds/red-flags/r003',
                     icon: FileJsonIcon,
                   },
                   {
-                    title: 'Sub Sub Menu 2',
-                    url: '/ocds/red-flags/sub-sub-menu-2',
+                    title: 'R059',
+                    url: '/ocds/red-flags/r059',
+                    icon: FileJsonIcon,
+                  },
+                  {
+                    title: 'R060',
+                    url: '/ocds/red-flags/r060',
+                    icon: FileJsonIcon,
+                  },
+                  {
+                    title: 'R061',
+                    url: '/ocds/red-flags/r061',
+                    icon: FileJsonIcon,
+                  },
+                  {
+                    title: 'R062',
+                    url: '/ocds/red-flags/r062',
                     icon: FileJsonIcon,
                   },
                 ],
@@ -135,13 +150,28 @@ export const SIDEBAR_DATA: {
                 icon: FileJsonIcon,
                 subItems: [
                   {
-                    title: 'Sub Sub Menu 1',
-                    url: '/ocds/indicators/sub-sub-menu-1',
+                    title: 'UC025',
+                    url: '/ocds/indicators/uc025',
                     icon: FileJsonIcon,
                   },
                   {
-                    title: 'Sub Sub Menu 2',
-                    url: '/ocds/indicators/sub-sub-menu-2',
+                    title: 'UC036',
+                    url: '/ocds/indicators/uc036',
+                    icon: FileJsonIcon,
+                  },
+                  {
+                    title: 'UC040',
+                    url: '/ocds/indicators/uc040',
+                    icon: FileJsonIcon,
+                  },
+                  {
+                    title: 'UC043',
+                    url: '/ocds/indicators/uc043',
+                    icon: FileJsonIcon,
+                  },
+                  {
+                    title: 'UC053',
+                    url: '/ocds/indicators/uc053',
                     icon: FileJsonIcon,
                   },
                 ],
