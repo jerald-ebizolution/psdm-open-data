@@ -184,6 +184,10 @@ export function getBudgetForYear(year: string): RegionalBudgetEntry[] {
       max,
       label: formatRangeLabel(min, max),
       color,
+      title: region,
+      // itemStyle: {
+      //   color
+      // }
     }));
 }
 
@@ -201,6 +205,10 @@ export function getBudgetForRegion(
       max,
       label: formatRangeLabel(min, max),
       color,
+      title: year,
+      // itemStyle: {
+      //   color
+      // }
     }));
 }
 

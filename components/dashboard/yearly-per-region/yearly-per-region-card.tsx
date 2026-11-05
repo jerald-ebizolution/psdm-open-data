@@ -10,14 +10,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import { Label } from "@/components/ui/label";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import {
   getAvailableYears,
   getLatestYear,
@@ -28,6 +28,10 @@ export function YearlyPerRegionCard() {
   const years = getAvailableYears();
   const [year, setYear] = useState(getLatestYear());
   const regions = useMemo(() => getRegionsForYear(year), [year]);
+
+  const handleYearChange = (value: string) => {
+    setYear(value);
+  };
 
   return (
     <Card className="border-border/80 bg-card shadow-sm">
@@ -43,10 +47,10 @@ export function YearlyPerRegionCard() {
           </CardDescription>
         </div>
 
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
+        {/* <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
           <div className="flex w-full flex-col gap-2 sm:max-w-[220px]">
             <Label htmlFor="year-filter">Filter by Year</Label>
-            <Select value={year} onValueChange={setYear}>
+            <Select value={year} onValueChange={handleYearChange}>
               <SelectTrigger id="year-filter" className="w-full">
                 <SelectValue placeholder="Select year" />
               </SelectTrigger>
@@ -59,12 +63,12 @@ export function YearlyPerRegionCard() {
               </SelectContent>
             </Select>
           </div>
-        </div>
+        </div> */}
       </CardHeader>
 
       <CardContent className="pt-2 pb-6">
         <div className="w-full min-w-0">
-          <RegionalBarChart year={year} />
+          <RegionalBarChart year={year} years={years} onYearChange={handleYearChange} />
         </div>
       </CardContent>
     </Card>

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/ui/app-sidebar";
 
 export const metadata: Metadata = {
   title: "Open Data — Regional Budget Dashboard",
@@ -15,9 +17,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      // className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset>
+          <div className="bg-gray-200 h-screen overflow-y-scroll p-3">
+            {children}
+          </div>
+        </SidebarInset>
+        </SidebarProvider>
+      </body>
     </html>
   );
 }
