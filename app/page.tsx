@@ -1,9 +1,10 @@
 import { RegionPerYearCard } from "@/components/dashboard/region-per-year/region-per-year-card";
 import { YearlyPerRegionCard } from "@/components/dashboard/yearly-per-region/yearly-per-region-card";
-import Image from "next/image";
+import { redirect } from 'next/navigation';
 
 export default async function Home() {
-
+  
+return redirect('/merchant-analytics');
   return (
     <div className="min-h-full bg-[#f4f5f7]">
       {/* <header className="border-b border-border/70 bg-white">
