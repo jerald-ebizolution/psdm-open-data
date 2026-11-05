@@ -1,4 +1,4 @@
-import { Home, HomeIcon, IdCardIcon, LucideIcon, LucideMenu, PieChartIcon, ShoppingBagIcon, ShoppingCart } from "lucide-react";
+import { FileJsonIcon, Gavel, GitFork, Home, Landmark, LeafIcon, LucideIcon, NetworkIcon, ShieldAlert, ShoppingBagIcon, StoreIcon, Users } from "lucide-react";
 
 export const SIDE_BAR_MENU = [
   {
@@ -24,6 +24,8 @@ export const SIDE_BAR_MENU = [
 type NavSubItem = {
   title: string
   url: string
+  icon: LucideIcon
+  subItems?: NavSubItem[]
 }
 
 type NavItem = {
@@ -40,7 +42,7 @@ type NavGroup = {
 }
 
 export const SIDEBAR_DATA: {
-  navMain: {  admin: NavGroup[] }
+  navMain: { admin: NavGroup[] }
 } = {
   navMain: {
     admin: [
@@ -63,56 +65,86 @@ export const SIDEBAR_DATA: {
           {
             title: 'Merchant Analytics',
             url: '/merchant-analytics',
-            icon: HomeIcon,
+            icon: Users,
           },
           {
             title: 'Bids and Awards Analytics',
             url: '/bids-and-awards-analytics',
-            icon: ShoppingBagIcon,
+            icon: Gavel,
           },
           {
             title: 'Government Agency Analytics',
             url: '/government-agency-analytics',
-            icon: PieChartIcon,
+            icon: Landmark,
           },
           {
             title: 'Observers Analytics',
             url: '/observers-analytics',
-            icon: IdCardIcon,
+            icon: ShieldAlert,
           },
           {
             title: 'eMarketplace Analytics',
             url: '/emarketplace-analytics',
-            icon: LucideMenu,
+            icon: ShoppingBagIcon,
           },
           {
             title: 'Virtual Store Analytics',
             url: '/virtual-store-analytics',
-            icon: ShoppingCart,
+            icon: StoreIcon,
           },
           {
             title: 'Collusion Monitoring',
             url: '/collusion-monitoring',
-            icon: LucideMenu,
+            icon: NetworkIcon,
           },
           {
             title: 'Beneficial Ownership',
             url: '/beneficial-ownership',
-            icon: LucideMenu,
+            icon: GitFork,
           },
           {
             title: 'Green Procurement',
             url: '/green-procurement',
-            icon: LucideMenu,
+            icon: LeafIcon,
           },
           {
             title: 'OCDS',
             // url: '/ocds',
-            icon: LucideMenu,
+            icon: FileJsonIcon,
             subItems: [
               {
                 title: 'Red Flags',
-                url: '/ocds/red-flags',
+                url: '',
+                icon: FileJsonIcon,
+                subItems: [
+                  {
+                    title: 'Sub Sub Menu 1',
+                    url: '/ocds/red-flags/sub-sub-menu-1',
+                    icon: FileJsonIcon,
+                  },
+                  {
+                    title: 'Sub Sub Menu 2',
+                    url: '/ocds/red-flags/sub-sub-menu-2',
+                    icon: FileJsonIcon,
+                  },
+                ],
+              },
+              {
+                title: 'Indicators',
+                url: '/ocds/indicators',
+                icon: FileJsonIcon,
+                subItems: [
+                  {
+                    title: 'Sub Sub Menu 1',
+                    url: '/ocds/indicators/sub-sub-menu-1',
+                    icon: FileJsonIcon,
+                  },
+                  {
+                    title: 'Sub Sub Menu 2',
+                    url: '/ocds/indicators/sub-sub-menu-2',
+                    icon: FileJsonIcon,
+                  },
+                ],
               },
             ],
           },
