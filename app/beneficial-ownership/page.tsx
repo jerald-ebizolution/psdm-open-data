@@ -1,9 +1,13 @@
+import Image from "next/image"
 
 const BenificialOwnership = () => {
   return (
-    <div className="min-h-full bg-[#f4f5f7] flex justify-center items-center flex-col gap-3 text-center px-5">
-      <h1 className="text-5xl text-[#313D85]">Beneficial Ownership</h1>
-      <span className="text-lg">The Beneficial Ownership module provides internal transparency and risk screening to verify corporate control, trace linked entities, and detect conflicts of interest in procurement. It tracks KPIs including profiled suppliers, verified disclosures, linked corporate entities, and conflict-of-interest flags using data integrated from sources such as SEC GIS, DTI, BIR, and PCAB. Featuring an entity relationship map, the module cross-checks ownership against public officials and relatives using CSC PDS data to flag potential conflicts of interest, support shell company detection, and enable SALN linkages.</span>
+    // <div className="min-h-full bg-[#f4f5f7] flex justify-center items-center flex-col gap-3 text-center px-5">
+    //   <h1 className="text-5xl text-[#313D85]">Beneficial Ownership</h1>
+    //   <span className="text-lg">The Beneficial Ownership module provides internal transparency and risk screening to verify corporate control, trace linked entities, and detect conflicts of interest in procurement. It tracks KPIs including profiled suppliers, verified disclosures, linked corporate entities, and conflict-of-interest flags using data integrated from sources such as SEC GIS, DTI, BIR, and PCAB. Featuring an entity relationship map, the module cross-checks ownership against public officials and relatives using CSC PDS data to flag potential conflicts of interest, support shell company detection, and enable SALN linkages.</span>
+    // </div>
+    <div className="flex flex-col gap-5">
+      <Image src="/images/beneficial-ownership.webp" alt="PSDBM Logo"  width={2000} height={2000}  />
     </div>
   )
 }
