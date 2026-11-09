@@ -33,7 +33,8 @@ const TOTALS = {
 const total = (flag: keyof typeof TOTALS, fy: number) =>
   (TOTALS[flag] as Record<number, number>)[fy]
 
-const MINIMUM_DAYS: Record<string, number> = {
+/** R003 minimum posting period (calendar days) per procurement mode. */
+export const MINIMUM_DAYS: Record<string, number> = {
   "Public Bidding": 7,
   "Small Value Procurement": 3,
   Shopping: 3,
