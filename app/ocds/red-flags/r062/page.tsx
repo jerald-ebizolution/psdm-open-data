@@ -1,12 +1,8 @@
-import Image from "next/image"
+import { type PageSearchParams } from "@/lib/ocds-paging"
+import { DecisionPeriodPage } from "../_components/decision-period-page"
 
-const OcsdsIndicatorsR062 = () => {
-  return (
-    <div className="flex flex-col gap-5">
-      <Image src="/images/r062-1.png" alt="PSDBM Logo"  width={2000} height={2000}  />
-      <Image src="/images/r062-2.png" alt="PSDBM Logo"  width={2000} height={2000}  />
-    </div>
-  )
-}
+const OcdsRedFlagR062 = ({ searchParams }: { searchParams: Promise<PageSearchParams> }) => (
+  <DecisionPeriodPage flag="R062" searchParams={searchParams} />
+)
 
-export default OcsdsIndicatorsR062
+export default OcdsRedFlagR062
