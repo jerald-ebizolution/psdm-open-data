@@ -117,7 +117,7 @@ export function BlacklistTable({
   return (
     <div>
       {/* Summary — each tile is also a filter */}
-      <div className="grid gap-3 px-5 pb-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-3 px-4 pb-4 sm:grid-cols-2 xl:grid-cols-4">
         {views.map((v) => (
           <button
             key={v.key}
@@ -134,13 +134,13 @@ export function BlacklistTable({
             )}
           >
             <p className="text-xs font-medium opacity-80">{v.label}</p>
-            <p className="text-2xl font-bold tabular-nums">{formatCount(v.value)}</p>
+            <p className="text-xl font-semibold tabular-nums">{formatCount(v.value)}</p>
           </button>
         ))}
       </div>
 
       {/* Search + export */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3">
         <div className="relative w-full max-w-sm">
           <Search
             className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
@@ -173,14 +173,14 @@ export function BlacklistTable({
       <div className="overflow-x-auto border-t">
         <Table>
           <TableHeader>
-            <TableRow className="bg-[#313D85] hover:bg-[#313D85]">
-              <TableHead className="w-8 pl-5" />
-              <TableHead className="text-white">Supplier</TableHead>
-              <TableHead className="text-white">Organization type</TableHead>
-              <TableHead className="text-center text-white">Times blacklisted</TableHead>
-              <TableHead className="text-white">Latest blacklisting</TableHead>
-              <TableHead className="text-white">Status</TableHead>
-              <TableHead className="pr-5 text-white">Linked companies</TableHead>
+            <TableRow>
+              <TableHead className="w-8 pl-4" />
+              <TableHead>Supplier</TableHead>
+              <TableHead>Organization type</TableHead>
+              <TableHead className="text-center">Times blacklisted</TableHead>
+              <TableHead>Latest blacklisting</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="pr-4">Linked companies</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -195,7 +195,7 @@ export function BlacklistTable({
                     onClick={() => setOpen(expanded ? null : s.id)}
                     aria-expanded={expanded}
                   >
-                    <TableCell className="pl-5">
+                    <TableCell className="pl-4">
                       <ChevronDown
                         className={cn("size-4 text-muted-foreground transition-transform", !expanded && "-rotate-90")}
                         aria-hidden
@@ -226,7 +226,7 @@ export function BlacklistTable({
                     <TableCell>
                       <StatusBadge status={s.status} />
                     </TableCell>
-                    <TableCell className="pr-5">
+                    <TableCell className="pr-4">
                       {s.linked.length ? (
                         <span
                           className={cn(
@@ -258,7 +258,7 @@ export function BlacklistTable({
         </Table>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3">
         <p className="text-sm text-muted-foreground">
           {rows.length
             ? `Showing ${(current - 1) * PAGE_SIZE + 1}–${(current - 1) * PAGE_SIZE + visible.length} of ${rows.length} suppliers`
@@ -298,13 +298,13 @@ function SupplierDetail({ supplier: s }: { supplier: BlacklistedSupplier }) {
   return (
     <TableRow className="bg-muted/30 hover:bg-muted/30">
       <TableCell />
-      <TableCell colSpan={6} className="py-4 pr-5 whitespace-normal">
+      <TableCell colSpan={6} className="py-4 pr-4 whitespace-normal">
         <div className="grid gap-5 lg:grid-cols-2">
           <div>
             <p className="mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Blacklisting history</p>
             <ol className="space-y-2">
               {[...s.orders].reverse().map((o) => (
-                <li key={o.startDate} className="rounded-md bg-background p-3 text-sm ring-1 ring-foreground/10">
+                <li key={o.startDate} className="rounded-md bg-background p-3 text-sm border border-gray-200">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="font-medium">{o.agency}</span>
                     <span className="text-xs text-muted-foreground">{duration(o)}</span>
@@ -322,7 +322,7 @@ function SupplierDetail({ supplier: s }: { supplier: BlacklistedSupplier }) {
             {s.linked.length ? (
               <ul className="space-y-2">
                 {s.linked.map((l) => (
-                  <li key={l.name} className="rounded-md bg-background p-3 text-sm ring-1 ring-foreground/10">
+                  <li key={l.name} className="rounded-md bg-background p-3 text-sm border border-gray-200">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <span className="font-medium">{l.name}</span>
                       {l.registeredAfterBlacklisting && (

@@ -4,6 +4,8 @@ import * as echarts from "echarts"
 import { ChevronRight, Loader2, MapPin, RotateCcw } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 
+import { useIsMobile } from "@/hooks/use-mobile"
+
 import { BarList } from "@/components/analytics/ui"
 import { formatCount } from "@/components/ocds/format"
 import { Button } from "@/components/ui/button"
@@ -18,7 +20,7 @@ import {
   getAreaStats,
   getSectorBreakdown,
 } from "@/lib/merchant-geo"
-import { cn } from "@/lib/utils"
+// import { cn } from "@/lib/utils"
 
 type Crumb = { psgc: number; name: string; suppliers: number; activeRate: number; topCategory: string }
 type Feature = { properties: Record<string, string | number> }
@@ -41,6 +43,8 @@ export function GeoExplorer({
   /** Start drilled into this region (from the Region slicer). */
   initialRegion?: RegionStats
 }) {
+  // Phones: no pan/zoom so a swipe scrolls the page; tap still drills down.
+  const isMobile = useIsMobile()
   const country: Crumb = useMemo(() => {
     const suppliers = regions.reduce((a, r) => a + r.suppliers, 0)
     const activeRate = regions.reduce((a, r) => a + r.activeRate * r.suppliers, 0) / (suppliers || 1)
@@ -159,7 +163,7 @@ export function GeoExplorer({
           max,
           left: 8,
           bottom: 8,
-          itemHeight: 90,
+          itemHeight: isMobile ? 60 : 90,
           itemWidth: 10,
           text: [formatCount(max), "0"],
           textStyle: { color: "#6b7280", fontSize: 11 },
@@ -169,8 +173,10 @@ export function GeoExplorer({
         series: [
           {
             type: "map",
+            layoutCenter: ["50%", "50%"],
+            layoutSize: "96%",
             map: mapKey,
-            roam: true,
+            roam: !isMobile,
             scaleLimit: { min: 0.8, max: 12 },
             itemStyle: { borderColor: "#ffffff", borderWidth: 0.6, areaColor: "#f3f4f6" },
             emphasis: { label: { show: false }, itemStyle: { areaColor: "#f59e0b" } },
@@ -182,7 +188,7 @@ export function GeoExplorer({
       },
       { notMerge: true }
     )
-  }, [geo, mapKey, nodes, depth])
+  }, [geo, mapKey, nodes, depth, isMobile])
 
   const sectors = useMemo(
     () => getSectorBreakdown(current.psgc || "ph", current.suppliers),
@@ -191,10 +197,10 @@ export function GeoExplorer({
   const childLabel = CHILD_LABEL[depth]
 
   return (
-    <div className="grid lg:grid-cols-[1fr_22rem]">
+    <div className="grid lg:h-110 lg:grid-cols-[4fr_6fr]">
       {/* Map */}
-      <div className="relative min-h-[460px] border-t lg:border-r">
-        <div className="flex flex-wrap items-center gap-1 px-5 py-3 text-sm">
+      <div className="relative flex min-h-0 flex-col border-t lg:border-r">
+        <div className="flex flex-wrap items-center gap-1 px-4 py-3 text-sm">
           <MapPin className="mr-1 size-4 text-muted-foreground" aria-hidden />
           {[country, ...path].map((c, i) => (
             <span key={c.psgc} className="flex items-center gap-1">
@@ -231,7 +237,7 @@ export function GeoExplorer({
         </div>
         <div
           ref={elRef}
-          className="h-[420px] w-full"
+          className="h-72 w-full sm:h-80 lg:h-auto lg:min-h-0 lg:flex-1"
           role="img"
           aria-label={`Map of suppliers by ${childLabel.one.toLowerCase()}`}
         />
@@ -249,20 +255,20 @@ export function GeoExplorer({
       </div>
 
       {/* Selected area */}
-      <aside className="space-y-5 border-t p-5">
+      <aside className="space-y-4 border-t p-4 lg:min-h-0">
         <div>
           <p className="text-xs text-muted-foreground">
             {path.length ? CHILD_LABEL[(depth - 1) as GeoDepth].one : "Country"}
           </p>
-          <p className="text-lg font-semibold">{current.name}</p>
+          <p className="text-base font-semibold">{current.name}</p>
           <dl className="mt-3 grid grid-cols-2 gap-3">
             <div className="rounded-lg bg-blue-50 px-3 py-2">
               <dt className="text-xs text-muted-foreground">Suppliers</dt>
-              <dd className="text-xl font-bold tabular-nums">{formatCount(current.suppliers)}</dd>
+              <dd className="text-lg font-semibold tabular-nums">{formatCount(current.suppliers)}</dd>
             </div>
             <div className="rounded-lg bg-emerald-50 px-3 py-2">
               <dt className="text-xs text-muted-foreground">Active</dt>
-              <dd className="text-xl font-bold tabular-nums">{pctFmt(current.activeRate)}</dd>
+              <dd className="text-lg font-semibold tabular-nums">{pctFmt(current.activeRate)}</dd>
             </div>
           </dl>
           <p className="mt-2 text-xs text-muted-foreground">
@@ -272,9 +278,9 @@ export function GeoExplorer({
 
         <div>
           <p className="mb-1 text-sm font-semibold">Industry Sectors</p>
-          <BarList items={sectors} color="bg-[#1baf7a]" />
+          <BarList items={sectors} color="#00C49F" label="Suppliers" />
         </div>
-
+      {/* 
         <div>
           <p className="mb-1 text-sm font-semibold">Top {childLabel.many}</p>
           <ul className="space-y-0.5">
@@ -295,7 +301,7 @@ export function GeoExplorer({
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
       </aside>
     </div>
   )

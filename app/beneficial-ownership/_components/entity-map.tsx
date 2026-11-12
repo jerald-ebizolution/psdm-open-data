@@ -4,6 +4,8 @@ import * as echarts from "echarts"
 import { AlertTriangle, BadgeCheck, Search } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 
+import { useIsMobile } from "@/hooks/use-mobile"
+
 import { Input } from "@/components/ui/input"
 import { BO_SOURCES, type BoEntity } from "@/lib/beneficial-ownership-data"
 import { cn } from "@/lib/utils"
@@ -17,6 +19,8 @@ const CATEGORIES = [
 const sourceName = Object.fromEntries(BO_SOURCES.map((s) => [s.code, s.name]))
 
 export function EntityMap({ entities }: { entities: BoEntity[] }) {
+  // Phones: no pan/zoom/drag so a swipe scrolls the page; relationship labels hidden.
+  const isMobile = useIsMobile()
   const [q, setQ] = useState("")
   const initial = entities.find((e) => e.coi.length) ?? entities[0]
   const [selectedId, setSelectedId] = useState<string | undefined>(initial?.id)
@@ -76,12 +80,12 @@ export function EntityMap({ entities }: { entities: BoEntity[] }) {
           {
             type: "graph",
             layout: "force",
-            roam: true,
-            draggable: true,
-            force: { repulsion: 420, edgeLength: [90, 150], gravity: 0.06 },
+            roam: !isMobile,
+            draggable: !isMobile,
+            force: isMobile ? { repulsion: 220, edgeLength: [55, 95], gravity: 0.1 } : { repulsion: 420, edgeLength: [90, 150], gravity: 0.06 },
             categories: CATEGORIES.map((c) => ({ name: c.name, itemStyle: { color: c.color } })),
             label: { show: true, position: "bottom", fontSize: 11, color: "#111827", width: 130, overflow: "truncate" },
-            edgeLabel: { show: true, fontSize: 10, color: "#6b7280", formatter: (p: { data: Edge }) => p.data.label },
+            edgeLabel: { show: !isMobile, fontSize: 10, color: "#6b7280", formatter: (p: { data: Edge }) => p.data.label },
             lineStyle: { color: "#94a3b8", width: 1.5, curveness: 0.05 },
             emphasis: { focus: "adjacency" },
             data: [...nodes.values()],
@@ -91,9 +95,9 @@ export function EntityMap({ entities }: { entities: BoEntity[] }) {
       },
       { notMerge: true }
     )
-  }, [entity])
+  }, [entity, isMobile])
 
-  if (!entity) return <p className="border-t px-5 py-10 text-center text-sm text-muted-foreground">No suppliers match the selected filters.</p>
+  if (!entity) return <p className="border-t px-4 py-10 text-center text-sm text-muted-foreground">No suppliers match the selected filters.</p>
 
   return (
     <div className="grid lg:grid-cols-[16rem_1fr]">
@@ -103,7 +107,7 @@ export function EntityMap({ entities }: { entities: BoEntity[] }) {
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
           <Input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search supplier" aria-label="Search supplier" className="pl-9" />
         </div>
-        <ul className="max-h-[420px] space-y-0.5 overflow-y-auto">
+        <ul className="max-h-44 space-y-0.5 overflow-y-auto lg:max-h-[420px]">
           {list.map((e) => (
             <li key={e.id}>
               <button
@@ -124,7 +128,7 @@ export function EntityMap({ entities }: { entities: BoEntity[] }) {
       </aside>
 
       <div className="border-t">
-        <div className="flex flex-wrap items-center justify-between gap-3 px-5 pt-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 px-4 pt-4">
           <div>
             <p className="font-semibold">{entity.name}</p>
             <p className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -150,7 +154,7 @@ export function EntityMap({ entities }: { entities: BoEntity[] }) {
             ))}
           </ul>
         </div>
-        <div ref={elRef} className="h-[400px] w-full" role="img" aria-label={`Ownership map of ${entity.name}`} />
+        <div ref={elRef} className="h-[320px] w-full sm:h-[400px]" role="img" aria-label={`Ownership map of ${entity.name}`} />
         {entity.shell.length > 0 && (
           <div className="mx-5 mb-4 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900">
             <span className="font-semibold">Shell company indicators:</span> {entity.shell.join(" · ")}

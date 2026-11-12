@@ -76,7 +76,7 @@ export function AgencyTable({
   return (
     <div className={cn("transition-opacity", isPending && "opacity-60")}>
       {/* Views */}
-      <div className="flex flex-wrap gap-2 px-5 pb-4">
+      <div className="flex flex-wrap gap-2 px-4 pb-4">
         {AGENCY_VIEWS.map((v) => {
           const active = v.code === view
           return (
@@ -99,7 +99,7 @@ export function AgencyTable({
         })}
       </div>
 
-      <div className="border-t px-5 py-3">
+      <div className="border-t px-4 py-3">
         <div className="relative w-full max-w-sm">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
           <Input
@@ -122,13 +122,13 @@ export function AgencyTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="pl-5">Agency</TableHead>
+              <TableHead className="pl-4">Agency</TableHead>
               <TableHead>Buyer</TableHead>
               <TableHead>APP</TableHead>
               <TableHead>APP-CSE</TableHead>
               <TableHead className="text-right">Total budget</TableHead>
               <TableHead className="w-44">Orders vs. plan</TableHead>
-              <TableHead className="pr-5 text-right">Procurements</TableHead>
+              <TableHead className="pr-4 text-right">Procurements</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -137,7 +137,7 @@ export function AgencyTable({
               const idle = a.app !== "missing" && a.procurements === 0
               return (
                 <TableRow key={a.id}>
-                  <TableCell className="max-w-80 pl-5 whitespace-normal">
+                  <TableCell className="max-w-80 pl-4 whitespace-normal">
                     <p className="font-medium">{a.name}</p>
                     <p className="text-xs text-muted-foreground">
                       {AGENCY_TYPE_SHORT[a.type]} · {regionNames[a.region] ?? a.region}
@@ -172,7 +172,7 @@ export function AgencyTable({
                       </div>
                     )}
                   </TableCell>
-                  <TableCell className="pr-5 text-right tabular-nums">
+                  <TableCell className="pr-4 text-right tabular-nums">
                     {idle ? (
                       <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-900">
                         <AlertTriangle className="size-3" aria-hidden /> None
@@ -195,7 +195,7 @@ export function AgencyTable({
         </Table>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3">
         <p className="text-sm text-muted-foreground">
           {total
             ? `Showing ${formatCount(from)}–${formatCount(from + rows.length - 1)} of ${formatCount(total)} agencies, largest budget first`

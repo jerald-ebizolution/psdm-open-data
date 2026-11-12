@@ -26,10 +26,10 @@ export default async function BeneficialOwnership({ searchParams }: { searchPara
   return (
     <div className="flex flex-col gap-5">
       {/* Header, filters, key figures */}
-      <Card className="gap-5 p-5">
+      <Card className="gap-4 p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-[#313D85] sm:text-3xl">Beneficial Ownership</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-[#313D85]">Beneficial Ownership</h1>
             <p className="text-sm text-muted-foreground">
               Who owns and controls suppliers, their linked companies, and conflicts of interest with public officials.
             </p>
@@ -118,7 +118,7 @@ export default async function BeneficialOwnership({ searchParams }: { searchPara
               <Link2 className="mt-1 size-5 text-indigo-600" aria-hidden />
               <div className="text-sm">
                 <p>
-                  <span className="text-xl font-bold tabular-nums">{formatCount(s.saln.recorded)}</span>{" "}
+                  <span className="text-lg font-semibold tabular-nums">{formatCount(s.saln.recorded)}</span>{" "}
                   <span className="text-muted-foreground">of {formatCount(s.saln.recorded + s.saln.pending)} flagged officials have a SALN link recorded</span>
                 </p>
                 <p className="mt-2 text-xs text-muted-foreground">
@@ -147,20 +147,20 @@ export default async function BeneficialOwnership({ searchParams }: { searchPara
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="py-2 pl-5 font-medium">Supplier</th>
-                  <th className="py-2 pr-5 font-medium">Indicators</th>
+                  <th className="py-2 pl-4 font-medium">Supplier</th>
+                  <th className="py-2 pr-4 font-medium">Indicators</th>
                 </tr>
               </thead>
               <tbody>
                 {shellEntities.slice(0, 8).map((e) => (
                   <tr key={e.id} className="border-t align-top">
-                    <td className="py-2 pl-5">
+                    <td className="py-2 pl-4">
                       <p className="font-medium">{e.name}</p>
                       <p className="text-xs text-muted-foreground">
                         {e.form} · {e.shell.length} indicator{e.shell.length > 1 ? "s" : ""}
                       </p>
                     </td>
-                    <td className="py-2 pr-5">
+                    <td className="py-2 pr-4">
                       <div className="flex flex-wrap gap-1">
                         {e.shell.map((i) => (
                           <span key={i} className="rounded bg-amber-50 px-1.5 py-0.5 text-xs text-amber-900">

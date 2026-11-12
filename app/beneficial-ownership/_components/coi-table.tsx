@@ -31,7 +31,7 @@ export function CoiTable({ entities }: { entities: BoEntity[] }) {
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3">
         <div className="relative w-full max-w-xs">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
           <Input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search supplier or agency" aria-label="Search supplier or agency" className="pl-9" />
@@ -59,20 +59,20 @@ export function CoiTable({ entities }: { entities: BoEntity[] }) {
       <div className="overflow-x-auto border-t">
         <Table>
           <TableHeader>
-            <TableRow className="bg-[#4338ca] hover:bg-[#4338ca]">
-              <TableHead className="pl-5 text-white">Supplier</TableHead>
-              <TableHead className="text-white">Owner</TableHead>
-              <TableHead className="text-white">Linked official</TableHead>
-              <TableHead className="text-white">Relationship</TableHead>
-              <TableHead className="text-right text-white">Awards from the official’s agency</TableHead>
-              <TableHead className="text-white">SALN</TableHead>
-              <TableHead className="pr-5 text-white">Status</TableHead>
+            <TableRow>
+              <TableHead className="pl-4">Supplier</TableHead>
+              <TableHead>Owner</TableHead>
+              <TableHead>Linked official</TableHead>
+              <TableHead>Relationship</TableHead>
+              <TableHead className="text-right">Awards from the official’s agency</TableHead>
+              <TableHead>SALN</TableHead>
+              <TableHead className="pr-4">Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.map(({ entity, m }) => (
               <TableRow key={`${entity.id}-${m.official.id}`}>
-                <TableCell className="pl-5 font-medium">{entity.name}</TableCell>
+                <TableCell className="pl-4 font-medium">{entity.name}</TableCell>
                 <TableCell className="font-mono text-xs">{m.owner.initials}</TableCell>
                 <TableCell className="max-w-72 whitespace-normal">
                   <p className="font-mono text-xs">{m.official.initials}</p>
@@ -87,7 +87,7 @@ export function CoiTable({ entities }: { entities: BoEntity[] }) {
                 <TableCell className="text-xs">
                   {m.saln === "recorded" ? "Linkage recorded" : <span className="text-muted-foreground">Awaiting CSC data</span>}
                 </TableCell>
-                <TableCell className="pr-5">
+                <TableCell className="pr-4">
                   <span className={cn("rounded-full px-2 py-0.5 text-xs font-semibold", STATUS_STYLE[m.status])}>{COI_STATUS[m.status]}</span>
                 </TableCell>
               </TableRow>
@@ -102,7 +102,7 @@ export function CoiTable({ entities }: { entities: BoEntity[] }) {
           </TableBody>
         </Table>
       </div>
-      <p className="border-t px-5 py-3 text-xs text-muted-foreground">
+      <p className="border-t px-4 py-3 text-xs text-muted-foreground">
         Matches compare owners and directors with officials and their relatives listed in the CSC Personal Data Sheet. Names are
         masked; full identities are available to authorized reviewers only.
       </p>

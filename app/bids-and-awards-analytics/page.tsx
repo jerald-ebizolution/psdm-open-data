@@ -1,7 +1,8 @@
 import { ArrowRight, X } from "lucide-react"
 import Link from "next/link"
 
-import { ColumnChart, SERIES, TrendChart } from "@/components/analytics/charts"
+import { ColumnChart, TrendChart } from "@/components/analytics/charts"
+import { SERIES } from "@/components/analytics/palette"
 import { FilterBar } from "@/components/analytics/filter-bar"
 import {
   BarList,
@@ -74,10 +75,10 @@ export default async function BidsAndAwardsAnalytics({ searchParams }: { searchP
   return (
     <div className="flex flex-col gap-5">
       {/* Header, filters and key figures */}
-      <Card className="gap-5 p-5">
+      <Card className="gap-4 p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-[#313D85] sm:text-3xl">Bids and Awards Analytics</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-[#313D85]">Bids and Awards Analytics</h1>
             <p className="text-sm text-muted-foreground">
               Bid notices, approved budgets and awarded amounts, procurement modes, bid activity and top agencies
               and suppliers.
@@ -228,14 +229,14 @@ export default async function BidsAndAwardsAnalytics({ searchParams }: { searchP
       <div className="grid gap-5 lg:grid-cols-5">
         <SectionCard className="lg:col-span-3" title="By Procurement Mode" description="Click a mode for its breakdown" flush>
           <div className="overflow-x-auto border-t">
-            <table className="w-full text-sm">
+            <table className="w-full min-w-[560px] text-sm">
               <thead>
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="py-2 pl-5 font-medium">Mode</th>
+                  <th className="py-2 pl-4 font-medium">Mode</th>
                   <th className="py-2 font-medium">Notices</th>
                   <th className="py-2 text-right font-medium">ABC</th>
                   <th className="py-2 text-right font-medium">Lots awarded</th>
-                  <th className="py-2 pr-5 text-right font-medium">Awarded</th>
+                  <th className="py-2 pr-4 text-right font-medium">Awarded</th>
                 </tr>
               </thead>
               <tbody>
@@ -250,7 +251,7 @@ export default async function BidsAndAwardsAnalytics({ searchParams }: { searchP
                         filter.mode && !active && "opacity-50 hover:opacity-100"
                       )}
                     >
-                      <td className="py-2 pl-5">
+                      <td className="py-2 pl-4">
                         <Link
                           href={href({ mode: active ? null : m.code })}
                           scroll={false}
@@ -272,14 +273,14 @@ export default async function BidsAndAwardsAnalytics({ searchParams }: { searchP
                       </td>
                       <td className="py-2 text-right tabular-nums">{pesoCompact(m.abc)}</td>
                       <td className="py-2 text-right tabular-nums">{formatCount(m.lotsAwarded)}</td>
-                      <td className="py-2 pr-5 text-right tabular-nums">{pesoCompact(m.awardedAmount)}</td>
+                      <td className="py-2 pr-4 text-right tabular-nums">{pesoCompact(m.awardedAmount)}</td>
                     </tr>
                   )
                 })}
               </tbody>
               <tfoot>
                 <tr className="border-t bg-muted/40 font-semibold">
-                  <td className="py-2 pl-5">Total</td>
+                  <td className="py-2 pl-4">Total</td>
                   <td className="py-2 pr-3 text-right tabular-nums">
                     {formatCount(board.reduce((a, m) => a + m.notices, 0))}
                   </td>
@@ -287,7 +288,7 @@ export default async function BidsAndAwardsAnalytics({ searchParams }: { searchP
                   <td className="py-2 text-right tabular-nums">
                     {formatCount(board.reduce((a, m) => a + m.lotsAwarded, 0))}
                   </td>
-                  <td className="py-2 pr-5 text-right tabular-nums">
+                  <td className="py-2 pr-4 text-right tabular-nums">
                     {pesoCompact(board.reduce((a, m) => a + m.awardedAmount, 0))}
                   </td>
                 </tr>
@@ -353,7 +354,8 @@ export default async function BidsAndAwardsAnalytics({ searchParams }: { searchP
           description={`${formatCount(overview.failed.count)} failed lots`}
         >
           <BarList
-            color="bg-[#eb6834]"
+            color={SERIES.orange}
+            label="Failed lots"
             items={[
               { label: "No bidder", value: overview.failureReasons.noBidder },
               { label: "All bidders ineligible", value: overview.failureReasons.ineligible },
@@ -467,7 +469,7 @@ function MiniStat({ label, value, warn }: { label: string; value: string; warn?:
   return (
     <div className={cn("rounded-lg px-3 py-2", warn ? "bg-amber-50" : "bg-muted/60")}>
       <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="text-lg font-bold tabular-nums">{value}</p>
+      <p className="text-base font-semibold tabular-nums">{value}</p>
     </div>
   )
 }
@@ -488,13 +490,13 @@ function Indicator({
   return (
     <Link
       href={href}
-      className="group flex flex-col rounded-lg p-4 ring-1 ring-foreground/10 transition hover:bg-muted/40 hover:ring-foreground/20"
+      className="group flex flex-col rounded-lg p-4 border border-gray-200 transition hover:bg-muted/40 hover:ring-foreground/20"
     >
       <span className="mb-2 w-fit rounded bg-blue-50 px-1.5 py-0.5 font-mono text-[11px] font-semibold text-blue-700">
         {code}
       </span>
       <span className="text-sm font-medium">{title}</span>
-      <span className="mt-2 text-2xl font-bold tabular-nums">{value}</span>
+      <span className="mt-2 text-xl font-semibold tabular-nums">{value}</span>
       {detail && <span className="mt-1 text-xs text-muted-foreground">{detail}</span>}
       <span className="mt-auto inline-flex items-center gap-1 pt-3 text-xs font-semibold text-[#2a78d6]">
         View details <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />

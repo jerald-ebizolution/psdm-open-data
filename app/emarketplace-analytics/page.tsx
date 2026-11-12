@@ -14,7 +14,7 @@ import { ItemsTable } from "./_components/items-table"
 
 type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 
-const VIOLET = "#6250d6"
+const VIOLET = "#8884D8"
 
 export default async function EmarketplaceAnalytics({ searchParams }: { searchParams: SearchParams }) {
   const [params, fiscalYears, regions] = await Promise.all([searchParams, getFiscalYears(), getRegions()])
@@ -34,11 +34,11 @@ export default async function EmarketplaceAnalytics({ searchParams }: { searchPa
   return (
     <div className="flex flex-col gap-5">
       {/* Header, filters and key figures */}
-      <Card className="gap-5 p-5">
+      <Card className="gap-4 p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
             <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-2xl font-bold text-[#313D85] sm:text-3xl">eMarketplace Analytics</h1>
+              <h1 className="text-xl font-semibold tracking-tight text-[#313D85]">eMarketplace Analytics</h1>
               <Link
                 href="#uploads"
                 className="relative inline-flex items-center gap-1.5 rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-800 hover:bg-violet-100"
@@ -115,25 +115,25 @@ export default async function EmarketplaceAnalytics({ searchParams }: { searchPa
           <dl className="mt-5 grid grid-cols-2 gap-3 text-center">
             <div className="rounded-lg bg-muted/60 px-2 py-2">
               <dt className="text-xs text-muted-foreground">Delivered</dt>
-              <dd className="text-lg font-bold tabular-nums">{pct(f.delivered / Math.max(1, f.checkouts))}</dd>
+              <dd className="text-base font-semibold tabular-nums">{pct(f.delivered / Math.max(1, f.checkouts))}</dd>
               <dd className="text-xs text-muted-foreground">avg {f.daysToDeliver.toFixed(0)} days</dd>
             </div>
             <div className="rounded-lg bg-muted/60 px-2 py-2">
               <dt className="text-xs text-muted-foreground">Paid</dt>
-              <dd className="text-lg font-bold tabular-nums">{pct(f.paid / Math.max(1, f.checkouts))}</dd>
+              <dd className="text-base font-semibold tabular-nums">{pct(f.paid / Math.max(1, f.checkouts))}</dd>
               <dd className="text-xs text-muted-foreground">avg {f.daysToPay.toFixed(0)} days after delivery</dd>
             </div>
           </dl>
         </SectionCard>
 
         <SectionCard title="Delay Reasons" description={`${formatCount(f.checkouts - f.paid)} orders not yet delivered or paid`}>
-          <BarList items={f.delays} color="bg-amber-500" />
+          <BarList items={f.delays} color="#FFBB28" label="Orders" />
         </SectionCard>
 
         <SectionCard title="Procurement Savings" description="Catalogue (bulk) price vs. open-market price">
           {s.savings.covered ? (
             <>
-              <p className="text-3xl font-bold text-emerald-700 tabular-nums">{pct(s.savings.rate)}</p>
+              <p className="text-2xl font-semibold text-emerald-700 tabular-nums">{pct(s.savings.rate)}</p>
               <p className="text-sm text-muted-foreground">
                 {pesoCompact(s.savings.amount)} saved against open-market prices
               </p>
@@ -182,7 +182,7 @@ export default async function EmarketplaceAnalytics({ searchParams }: { searchPa
             title="Recent Document Uploads"
             action={
               newUploads > 0 && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-violet-600 px-2 py-0.5 text-xs font-bold text-white">
+                <span className="inline-flex items-center gap-1 rounded-full bg-violet-600 px-2 py-0.5 text-xs font-semibold text-white">
                   <Bell className="size-3" aria-hidden /> {newUploads} new
                 </span>
               )
@@ -229,19 +229,19 @@ export default async function EmarketplaceAnalytics({ searchParams }: { searchPa
       <div className="grid gap-5 lg:grid-cols-5">
         <SectionCard className="lg:col-span-3" title="Supplier Performance" description="Delivery record of the most-used suppliers" flush>
           <div className="overflow-x-auto border-t">
-            <table className="w-full text-sm">
+            <table className="w-full min-w-[480px] text-sm">
               <thead>
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="py-2 pl-5 font-medium">Supplier</th>
+                  <th className="py-2 pl-4 font-medium">Supplier</th>
                   <th className="py-2 text-right font-medium">Orders</th>
                   <th className="py-2 font-medium">On-time delivery</th>
-                  <th className="py-2 pr-5 text-right font-medium">Avg. days</th>
+                  <th className="py-2 pr-4 text-right font-medium">Avg. days</th>
                 </tr>
               </thead>
               <tbody>
                 {s.suppliers.map((sp) => (
                   <tr key={sp.name} className="border-t">
-                    <td className="py-2 pl-5 font-medium">{sp.name}</td>
+                    <td className="py-2 pl-4 font-medium">{sp.name}</td>
                     <td className="py-2 text-right tabular-nums">{formatCount(sp.orders)}</td>
                     <td className="w-[35%] px-3 py-2">
                       <div className="flex items-center gap-2">
@@ -254,7 +254,7 @@ export default async function EmarketplaceAnalytics({ searchParams }: { searchPa
                         <span className="w-10 text-right tabular-nums">{pct(sp.onTime, 0)}</span>
                       </div>
                     </td>
-                    <td className="py-2 pr-5 text-right tabular-nums">{sp.avgDays.toFixed(0)}</td>
+                    <td className="py-2 pr-4 text-right tabular-nums">{sp.avgDays.toFixed(0)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -263,7 +263,7 @@ export default async function EmarketplaceAnalytics({ searchParams }: { searchPa
         </SectionCard>
 
         <SectionCard className="lg:col-span-2" title="Buyer Adoption">
-          <p className="text-3xl font-bold tabular-nums">{pct(s.activeBuyers / Math.max(1, s.centralizedAgencies))}</p>
+          <p className="text-2xl font-semibold tabular-nums">{pct(s.activeBuyers / Math.max(1, s.centralizedAgencies))}</p>
           <p className="text-sm text-muted-foreground">
             of {formatCount(s.centralizedAgencies)} agencies with an APP-CSE placed at least one order
           </p>
@@ -276,11 +276,11 @@ export default async function EmarketplaceAnalytics({ searchParams }: { searchPa
           <dl className="mt-5 grid grid-cols-2 gap-3">
             <div className="rounded-lg bg-muted/60 px-3 py-2">
               <dt className="text-xs text-muted-foreground">Ordering agencies</dt>
-              <dd className="text-lg font-bold tabular-nums">{formatCount(s.activeBuyers)}</dd>
+              <dd className="text-base font-semibold tabular-nums">{formatCount(s.activeBuyers)}</dd>
             </div>
             <div className="rounded-lg bg-violet-50 px-3 py-2">
               <dt className="text-xs text-muted-foreground">First-time buyers</dt>
-              <dd className="text-lg font-bold tabular-nums">{formatCount(s.firstTimeBuyers)}</dd>
+              <dd className="text-base font-semibold tabular-nums">{formatCount(s.firstTimeBuyers)}</dd>
             </div>
           </dl>
         </SectionCard>

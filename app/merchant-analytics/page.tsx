@@ -1,5 +1,5 @@
-import { ColumnChart, SERIES } from "@/components/analytics/charts"
-import { FilterBar } from "@/components/analytics/filter-bar"
+import { ColumnChart } from "@/components/analytics/charts"
+import { SERIES } from "@/components/analytics/palette"
 import {
   BarList,
   change,
@@ -20,23 +20,20 @@ import {
   getMembershipStatus,
   getRegistrationTrends,
   getSupplierOverview,
-  ORG_TYPES,
-  parseMerchantFilter,
-  REGISTRATION_YEARS,
+  LATEST_YEAR,
+  type MerchantFilter,
 } from "@/lib/merchant-analytics-data"
 import { getRegions } from "@/lib/ocds-regions"
 import { BlacklistTable } from "./_components/blacklist-table"
 import { GeoExplorer } from "./_components/geo-explorer"
 
-type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
+// No filters: the page always shows the latest year (2026), nationwide, local and foreign combined.
+const FILTER: MerchantFilter = { fromYear: LATEST_YEAR, toYear: LATEST_YEAR, region: null, orgType: null }
 
-export default async function MerchantAnalytics({ searchParams }: { searchParams: SearchParams }) {
-  const [params, regions] = await Promise.all([searchParams, getRegions()])
-  const filter = parseMerchantFilter(
-    params,
-    regions.map((r) => r.code)
-  )
-
+export default async function MerchantAnalytics() {
+  const regions = await getRegions()
+  const filter = FILTER
+  console.log(filter)
   const [overview, trends, geo, membership, blacklist, categories] = await Promise.all([
     getSupplierOverview(filter),
     getRegistrationTrends(filter),
@@ -47,6 +44,7 @@ export default async function MerchantAnalytics({ searchParams }: { searchParams
   ])
 
   const regionNames = Object.fromEntries(regions.map((r) => [r.code, r.name]))
+  console.log(regionNames, "regionNamesregionNames")
   const range = filter.fromYear === filter.toYear ? String(filter.toYear) : `${filter.fromYear}–${filter.toYear}`
   const fewSuppliers = categories.categories.filter((c) => c.suppliers < categories.thinThreshold)
   const seed = `${filter.fromYear}-${filter.toYear}-${filter.orgType}`
@@ -56,28 +54,17 @@ export default async function MerchantAnalytics({ searchParams }: { searchParams
   return (
     <div className="flex flex-col gap-5">
       {/* Header, slicers and key figures (01-A) */}
-      <Card className="gap-5 p-5">
+      <Card className="gap-4 p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-[#313D85] sm:text-3xl">Merchant Analytics</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-[#313D85]">Merchant Analytics</h1>
             <p className="text-sm text-muted-foreground">
               Registered suppliers, where they are, their membership and categories, and who is blacklisted.
             </p>
           </div>
-          <FilterBar
-            yearRange={{ from: filter.fromYear, to: filter.toYear, years: REGISTRATION_YEARS }}
-            selects={[
-              { param: "region", label: "Region", allLabel: "All regions", value: filter.region, options: regions },
-              {
-                param: "orgType",
-                label: "Organization type",
-                allLabel: "Local and foreign",
-                value: filter.orgType,
-                options: ORG_TYPES,
-                className: "w-44 bg-white",
-              },
-            ]}
-          />
+          <span className="rounded-md border border-gray-200 bg-gray-50 px-2.5 py-1 text-xs font-medium text-gray-600">
+            FY {filter.toYear}
+          </span>
         </div>
 
         <KpiGrid columns={5}>
@@ -85,7 +72,7 @@ export default async function MerchantAnalytics({ searchParams }: { searchParams
             tone="blue"
             label="Registered Suppliers"
             value={formatCount(overview.registered)}
-            delta={{ value: change(overview.registered, overview.registeredAtStart), label: `since ${filter.fromYear}` }}
+            delta={{ value: change(overview.registered, overview.registeredAtStart), label: "vs last year" }}
           />
           <KpiTile
             tone="green"
@@ -114,7 +101,7 @@ export default async function MerchantAnalytics({ searchParams }: { searchParams
         <SectionCard
           className="lg:col-span-3"
           title="New Registrations by Year"
-          description={`Suppliers registered each year, ${range}`}
+          description={`Suppliers registered in ${range} (year-to-date) and the ${filter.toYear + 1} forecast`}
         >
           <ColumnChart
             data={trends.years}
@@ -132,26 +119,25 @@ export default async function MerchantAnalytics({ searchParams }: { searchParams
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-lg bg-muted/60 px-3 py-2">
               <p className="text-xs text-muted-foreground">
-                {trends.yoy ? `Growth in ${trends.yoy.year}` : "Year-on-year growth"}
+                {trends.yoy ? `Growth in ${trends.yoy.year} vs ${trends.yoy.year - 1}` : "Year-on-year growth"}
               </p>
-              <p className="text-xl font-bold tabular-nums">
+              <p className="text-lg font-semibold tabular-nums">
                 {trends.yoy ? <Delta value={trends.yoy.rate} /> : "—"}
               </p>
+              {trends.yoy && <p className="text-xs text-muted-foreground">{trends.yoy.year} annualized from year-to-date</p>}
             </div>
             <div className="rounded-lg bg-blue-50 px-3 py-2">
               <p className="text-xs text-muted-foreground">
                 {trends.forecast ? `${trends.forecast.year} forecast` : "Forecast"}
               </p>
-              <p className="text-xl font-bold tabular-nums">
+              <p className="text-lg font-semibold tabular-nums">
                 {trends.forecast ? formatCount(trends.forecast.value) : "—"}
               </p>
               {trends.forecast ? (
                 <p className="text-xs">
                   <Delta value={trends.forecast.rate} label="vs this year" />
                 </p>
-              ) : (
-                <p className="text-xs text-muted-foreground">Set “to” year to {REGISTRATION_YEARS[0]}</p>
-              )}
+              ) : null}
             </div>
           </div>
 
@@ -218,11 +204,11 @@ export default async function MerchantAnalytics({ searchParams }: { searchParams
           <div className="mt-5 grid grid-cols-2 gap-3">
             <div className="rounded-lg bg-amber-50 px-3 py-2">
               <p className="text-xs text-amber-900">Expiring in the next 90 days</p>
-              <p className="text-xl font-bold tabular-nums">{formatCount(membership.expiringNext90)}</p>
+              <p className="text-lg font-semibold tabular-nums">{formatCount(membership.expiringNext90)}</p>
             </div>
             <div className="rounded-lg bg-muted px-3 py-2">
               <p className="text-xs text-muted-foreground">Expired in the last 90 days</p>
-              <p className="text-xl font-bold tabular-nums">{formatCount(membership.expiredLast90)}</p>
+              <p className="text-lg font-semibold tabular-nums">{formatCount(membership.expiredLast90)}</p>
             </div>
           </div>
         </SectionCard>

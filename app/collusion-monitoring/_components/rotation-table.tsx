@@ -23,14 +23,14 @@ export function RotationTable({ cases, regionNames }: { cases: RotationCase[]; r
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-8 pl-5" />
+            <TableHead className="w-8 pl-4" />
             <TableHead>Agency</TableHead>
             <TableHead>Suppliers involved</TableHead>
             <TableHead className="text-right">Tenders</TableHead>
             <TableHead className="text-right">Rotation cycles</TableHead>
             <TableHead className="text-right">Within ±0.5%</TableHead>
             <TableHead className="text-right">HHI</TableHead>
-            <TableHead className="pr-5 text-right">Risk score</TableHead>
+            <TableHead className="pr-4 text-right">Risk score</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -40,7 +40,7 @@ export function RotationTable({ cases, regionNames }: { cases: RotationCase[]; r
             return (
               <Fragment key={c.id}>
                 <TableRow className={cn("cursor-pointer", expanded && "bg-muted/40")} onClick={() => setOpen(expanded ? null : c.id)} aria-expanded={expanded}>
-                  <TableCell className="pl-5">
+                  <TableCell className="pl-4">
                     <ChevronDown className={cn("size-4 text-muted-foreground transition-transform", !expanded && "-rotate-90")} aria-hidden />
                   </TableCell>
                   <TableCell className="max-w-72 whitespace-normal">
@@ -52,14 +52,14 @@ export function RotationTable({ cases, regionNames }: { cases: RotationCase[]; r
                   <TableCell className="text-right tabular-nums">{formatCount(c.cycles)}</TableCell>
                   <TableCell className="text-right tabular-nums">{formatCount(c.clustered)}</TableCell>
                   <TableCell className={cn("text-right tabular-nums", c.hhi > 2500 && "font-semibold text-red-700")}>{formatCount(c.hhi)}</TableCell>
-                  <TableCell className="pr-5 text-right">
-                    <span className={cn("rounded-full px-2 py-0.5 text-xs font-bold tabular-nums", BAND[band].badge)}>{c.risk}</span>
+                  <TableCell className="pr-4 text-right">
+                    <span className={cn("rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums", BAND[band].badge)}>{c.risk}</span>
                   </TableCell>
                 </TableRow>
                 {expanded && (
                   <TableRow className="bg-muted/20 hover:bg-muted/20">
                     <TableCell />
-                    <TableCell colSpan={7} className="py-4 pr-5 whitespace-normal">
+                    <TableCell colSpan={7} className="py-4 pr-4 whitespace-normal">
                       <p className="mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
                         Winner of each tender, in date order
                       </p>
@@ -68,7 +68,7 @@ export function RotationTable({ cases, regionNames }: { cases: RotationCase[]; r
                           <span
                             key={i}
                             title={`Tender ${i + 1}: ${c.suppliers[w]}`}
-                            className="flex size-6 items-center justify-center rounded text-[10px] font-bold text-white"
+                            className="flex size-6 items-center justify-center rounded text-[10px] font-semibold text-white"
                             style={{ background: MEMBER_COLORS[w % MEMBER_COLORS.length] }}
                           >
                             {String.fromCharCode(65 + w)}
@@ -78,7 +78,7 @@ export function RotationTable({ cases, regionNames }: { cases: RotationCase[]; r
                       <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs">
                         {c.suppliers.map((s, i) => (
                           <li key={s} className="flex items-center gap-1.5">
-                            <span className="flex size-4 items-center justify-center rounded text-[9px] font-bold text-white" style={{ background: MEMBER_COLORS[i % MEMBER_COLORS.length] }}>
+                            <span className="flex size-4 items-center justify-center rounded text-[9px] font-semibold text-white" style={{ background: MEMBER_COLORS[i % MEMBER_COLORS.length] }}>
                               {String.fromCharCode(65 + i)}
                             </span>
                             {s}
@@ -112,9 +112,9 @@ export function RotationTable({ cases, regionNames }: { cases: RotationCase[]; r
 
 function Stat({ label, value }: { label: string; value: number }) {
   return (
-    <div className="rounded-md bg-background px-3 py-2 ring-1 ring-foreground/10">
+    <div className="rounded-md bg-background px-3 py-2 border border-gray-200">
       <dt className="text-xs text-muted-foreground">{label}</dt>
-      <dd className="font-bold tabular-nums">{formatCount(value)}</dd>
+      <dd className="font-semibold tabular-nums">{formatCount(value)}</dd>
     </div>
   )
 }
@@ -125,7 +125,7 @@ export function ReferralButton({ cases, regionNames }: { cases: RotationCase[]; 
   return (
     <div className="space-y-3">
       <p className="text-sm">
-        <span className="text-2xl font-bold tabular-nums">{eligible.length}</span>{" "}
+        <span className="text-xl font-semibold tabular-nums">{eligible.length}</span>{" "}
         <span className="text-muted-foreground">cases score {REFERRAL_THRESHOLD} or higher</span>
       </p>
       <Button

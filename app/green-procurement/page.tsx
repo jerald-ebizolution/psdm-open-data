@@ -35,10 +35,10 @@ export default async function GreenProcurement({ searchParams }: { searchParams:
   return (
     <div className="flex flex-col gap-5">
       {/* Header, filters, key figures */}
-      <Card className="gap-5 p-5">
+      <Card className="gap-4 p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-[#313D85] sm:text-3xl">Green Procurement</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-[#313D85]">Green Procurement</h1>
             <p className="text-sm text-muted-foreground">
               Green spend and compliance, certified suppliers and products, and the carbon savings of what agencies buy.
             </p>
@@ -90,7 +90,7 @@ export default async function GreenProcurement({ searchParams }: { searchParams:
           }
         >
           {drilled ? (
-            <BarList items={drilled.items.map((i) => ({ label: i.name, value: i.greenSpend }))} valueFormatter={pesoCompact} color="bg-green-700" />
+            <BarList items={drilled.items.map((i) => ({ label: i.name, value: i.greenSpend }))} format="peso" color="#00C49F" label="Green spend" />
           ) : (
             <ul className="space-y-1">
               {s.categories.map((c) => (
@@ -98,14 +98,14 @@ export default async function GreenProcurement({ searchParams }: { searchParams:
                   <Link
                     href={link({ category: c.code })}
                     scroll={false}
-                    className="grid grid-cols-[minmax(9rem,36%)_1fr_3.5rem_4.5rem] items-center gap-3 rounded-md px-2 py-1.5 text-sm hover:bg-muted/60"
+                    className="grid grid-cols-[minmax(7rem,45%)_1fr_3rem] items-center gap-2 sm:grid-cols-[minmax(9rem,36%)_1fr_3.5rem_4.5rem] sm:gap-3 rounded-md px-2 py-1.5 text-sm hover:bg-muted/60"
                   >
                     <span className="truncate">{c.name}</span>
                     <span className="h-2 overflow-hidden rounded-full bg-muted" aria-hidden>
                       <span className="block h-full rounded-full" style={{ width: `${(c.compliance / maxCompliance) * 100}%`, background: GREEN }} />
                     </span>
                     <span className="text-right font-semibold tabular-nums">{pct(c.compliance, 0)}</span>
-                    <span className="text-right text-muted-foreground tabular-nums">{pesoCompact(c.greenSpend)}</span>
+                    <span className="hidden text-right text-muted-foreground tabular-nums sm:block">{pesoCompact(c.greenSpend)}</span>
                   </Link>
                 </li>
               ))}
@@ -170,7 +170,7 @@ export default async function GreenProcurement({ searchParams }: { searchParams:
           <ol className="space-y-3">
             {s.ocr.map((step, i) => (
               <li key={step.label} className="flex items-center gap-3 text-sm">
-                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-green-700 text-xs font-bold text-white">{i + 1}</span>
+                <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-green-700 text-xs font-semibold text-white">{i + 1}</span>
                 <span className="flex-1">{step.label}</span>
                 <span className="font-semibold tabular-nums">{formatCount(step.value)}</span>
               </li>
@@ -189,24 +189,24 @@ export default async function GreenProcurement({ searchParams }: { searchParams:
       {/* DENR-certified products (posted separately) */}
       <SectionCard title="DENR-Certified Products" description="Products with a valid DENR green certification" flush>
         <div className="overflow-x-auto border-t">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-150 text-sm">
             <thead>
               <tr className="text-left text-xs text-muted-foreground">
-                <th className="py-2 pl-5 font-medium">Product</th>
+                <th className="py-2 pl-4 font-medium">Product</th>
                 <th className="py-2 font-medium">Category</th>
                 <th className="py-2 font-medium">Supplier</th>
                 <th className="py-2 font-medium">Certificate</th>
-                <th className="py-2 pr-5 font-medium">Valid until</th>
+                <th className="py-2 pr-4 font-medium">Valid until</th>
               </tr>
             </thead>
             <tbody>
               {s.denrProducts.map((p) => (
                 <tr key={p.certificate} className="border-t">
-                  <td className="py-2 pl-5 font-medium">{p.product}</td>
+                  <td className="py-2 pl-4 font-medium">{p.product}</td>
                   <td className="py-2 text-muted-foreground">{p.category}</td>
                   <td className="py-2">{p.supplier}</td>
                   <td className="py-2 font-mono text-xs">{p.certificate}</td>
-                  <td className="py-2 pr-5 tabular-nums">{formatAwardDate(p.validUntil)}</td>
+                  <td className="py-2 pr-4 tabular-nums">{formatAwardDate(p.validUntil)}</td>
                 </tr>
               ))}
             </tbody>
@@ -218,30 +218,30 @@ export default async function GreenProcurement({ searchParams }: { searchParams:
       <div className="grid gap-5 lg:grid-cols-5">
         <SectionCard className="lg:col-span-3" title="Energy-Efficient Items and Avoided Emissions" description={`${tonnes(s.tco2e)} avoided per year`} flush>
           <div className="overflow-x-auto border-t">
-            <table className="w-full text-sm">
+            <table className="w-full min-w-140 text-sm">
               <thead>
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="py-2 pl-5 font-medium">Item</th>
+                  <th className="py-2 pl-4 font-medium">Item</th>
                   <th className="py-2 text-right font-medium">Units</th>
                   <th className="py-2 text-right font-medium">Energy saved</th>
                   <th className="py-2 text-right font-medium">Avoided</th>
-                  <th className="py-2 pr-5 font-medium">SDGs</th>
+                  <th className="py-2 pr-4 font-medium">SDGs</th>
                 </tr>
               </thead>
               <tbody>
                 {s.energy.map((e) => (
                   <tr key={e.name} className="border-t">
-                    <td className="py-2 pl-5">
+                    <td className="py-2 pl-4">
                       <p className="font-medium">{e.name}</p>
                       <p className="text-xs text-muted-foreground">{e.factorBasis}</p>
                     </td>
                     <td className="py-2 text-right tabular-nums">{formatCount(e.units)}</td>
                     <td className="py-2 text-right tabular-nums">{e.mwhSaved === null ? "—" : `${formatCount(Math.round(e.mwhSaved))} MWh`}</td>
                     <td className="py-2 text-right font-semibold tabular-nums">{tonnes(e.tco2e)}</td>
-                    <td className="py-2 pr-5">
+                    <td className="py-2 pr-4">
                       <div className="flex gap-1">
                         {e.sdgs.map((g) => (
-                          <span key={g} className="rounded px-1.5 py-0.5 text-[11px] font-bold text-white" style={{ background: s.sdgs.find((x) => x.code === g)?.color }}>
+                          <span key={g} className="rounded px-1.5 py-0.5 text-[11px] font-semibold text-white" style={{ background: s.sdgs.find((x) => x.code === g)?.color }}>
                             {g}
                           </span>
                         ))}
@@ -286,17 +286,17 @@ export default async function GreenProcurement({ searchParams }: { searchParams:
       <SectionCard title="Alignment with the UN Sustainable Development Goals">
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {s.sdgs.map((g) => (
-            <div key={g.code} className="rounded-xl p-4 text-white" style={{ background: g.color }}>
-              <p className="text-2xl font-bold">SDG {g.code}</p>
+            <div key={g.code} className="rounded-lg p-4 text-white" style={{ background: g.color }}>
+              <p className="text-xl font-semibold">SDG {g.code}</p>
               <p className="text-sm font-medium">{g.name}</p>
               <dl className="mt-3 grid grid-cols-2 gap-2 text-xs">
                 <div>
                   <dt className="opacity-80">Green spend</dt>
-                  <dd className="text-base font-bold tabular-nums">{pesoCompact(g.spend)}</dd>
+                  <dd className="text-base font-semibold tabular-nums">{pesoCompact(g.spend)}</dd>
                 </div>
                 <div>
                   <dt className="opacity-80">Avoided</dt>
-                  <dd className="text-base font-bold tabular-nums">{g.tco2e ? formatCount(Math.round(g.tco2e)) : "—"}</dd>
+                  <dd className="text-base font-semibold tabular-nums">{g.tco2e ? formatCount(Math.round(g.tco2e)) : "—"}</dd>
                 </div>
               </dl>
               <p className={cn("mt-2 text-xs opacity-85")}>{g.basis}</p>

@@ -94,7 +94,7 @@ function ItemResult({ item }: { item: SearchItem }) {
   const diff = item.external ? current.price / item.external - 1 : null
   const max = Math.max(...item.prices.map((p) => p.price), item.external ?? 0)
   return (
-    <div className="rounded-xl p-4 ring-1 ring-foreground/10">
+    <div className="rounded-lg p-4 border border-gray-200">
       <p className="text-sm font-medium">{item.name}</p>
       <p className="font-mono text-xs text-muted-foreground">
         UNSPSC {item.code} · per {item.unit}
@@ -102,7 +102,7 @@ function ItemResult({ item }: { item: SearchItem }) {
       <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="text-xs text-muted-foreground">Store price, {current.year}</p>
-          <p className="text-4xl font-bold tabular-nums" style={{ color: YEAR_COLOR[current.year] }}>
+          <p className="text-2xl font-semibold tabular-nums" style={{ color: YEAR_COLOR[current.year] }}>
             {peso.format(current.price)}
           </p>
         </div>
@@ -146,7 +146,7 @@ const STEPS: PurchaseOrderStatus[] = ["ordered", "delivered", "iar", "fact"]
 function PoResult({ po }: { po: PurchaseOrder }) {
   const reached = STEPS.indexOf(po.status)
   return (
-    <div className="rounded-xl p-4 ring-1 ring-foreground/10">
+    <div className="rounded-lg p-4 border border-gray-200">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <p className="font-mono text-sm font-semibold">{po.number}</p>
@@ -154,7 +154,7 @@ function PoResult({ po }: { po: PurchaseOrder }) {
             {po.agency} · {formatAwardDate(po.date)}
           </p>
         </div>
-        <p className="text-3xl font-bold text-orange-700 tabular-nums">{peso.format(po.total)}</p>
+        <p className="text-2xl font-semibold text-orange-700 tabular-nums">{peso.format(po.total)}</p>
       </div>
 
       <ol className="mt-4 grid grid-cols-4 gap-1 text-center text-[11px]">

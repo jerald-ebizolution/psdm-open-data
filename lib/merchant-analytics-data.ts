@@ -202,7 +202,7 @@ export type RegistrationTrends = {
   years: RegistrationYear[]
   local: number
   foreign: number
-  /** Growth of the last full year in the range over the year before it. */
+  /** Growth of the last year in the range over the year before it (a partial year is annualised). */
   yoy: { year: number; rate: number } | null
   /** Projection for the year after the latest data year (shown when the range ends there). */
   forecast: { year: number; value: number; rate: number } | null
@@ -229,11 +229,8 @@ export async function getRegistrationTrends(f: MerchantFilter): Promise<Registra
     return (n.local + n.foreign) * (12 / monthsCovered(y))
   }
 
-  const lastFull = isPartialYear(f.toYear) ? f.toYear - 1 : f.toYear
   const yoy =
-    lastFull >= f.fromYear && lastFull - 1 >= FIRST_YEAR
-      ? { year: lastFull, rate: total(lastFull) / total(lastFull - 1) - 1 }
-      : null
+    f.toYear - 1 >= FIRST_YEAR ? { year: f.toYear, rate: total(f.toYear) / total(f.toYear - 1) - 1 } : null
 
   // Linear trend over the last five years (current year annualised).
   let forecast: RegistrationTrends["forecast"] = null

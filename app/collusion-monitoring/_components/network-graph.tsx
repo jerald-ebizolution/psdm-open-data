@@ -4,6 +4,8 @@ import * as echarts from "echarts"
 import { Search, X } from "lucide-react"
 import { useEffect, useMemo, useRef, useState } from "react"
 
+import { useIsMobile } from "@/hooks/use-mobile"
+
 import { formatCount } from "@/components/ocds/format"
 import { Input } from "@/components/ui/input"
 import { type BidderNetwork, type RiskBand, SIGNALS } from "@/lib/collusion-data"
@@ -17,6 +19,8 @@ export const BAND: Record<RiskBand, { label: string; color: string; badge: strin
 const signalLabel = Object.fromEntries(SIGNALS.map((s) => [s.key, s.label]))
 
 export function NetworkGraph({ network, regionNames }: { network: BidderNetwork; regionNames: Record<string, string> }) {
+  // Phones: no pan/zoom/drag so a swipe scrolls the page; tap still selects.
+  const isMobile = useIsMobile()
   const [q, setQ] = useState("")
   const [selected, setSelected] = useState<string | null>(null)
   const elRef = useRef<HTMLDivElement>(null)
@@ -70,9 +74,9 @@ export function NetworkGraph({ network, regionNames }: { network: BidderNetwork;
           {
             type: "graph",
             layout: "force",
-            roam: true,
-            draggable: true,
-            force: { repulsion: 160, edgeLength: [50, 140], gravity: 0.08 },
+            roam: !isMobile,
+            draggable: !isMobile,
+            force: isMobile ? { repulsion: 90, edgeLength: [30, 80], gravity: 0.12 } : { repulsion: 160, edgeLength: [50, 140], gravity: 0.08 },
             emphasis: { focus: "adjacency", lineStyle: { width: 4 } },
             label: { show: false, position: "right", fontSize: 11, color: "#111827" },
             data: network.suppliers.map((s) => ({
@@ -80,7 +84,7 @@ export function NetworkGraph({ network, regionNames }: { network: BidderNetwork;
               name: s.name,
               symbolSize: 10 + (s.tenders / maxTenders) * 26,
               itemStyle: { color: BAND[s.band].color, borderColor: "#fff", borderWidth: 1.5 },
-              label: { show: s.band === "high" },
+              label: { show: s.band === "high" && !isMobile },
             })),
             links: network.edges.map((e) => ({
               ...e,
@@ -95,7 +99,7 @@ export function NetworkGraph({ network, regionNames }: { network: BidderNetwork;
       },
       { notMerge: true }
     )
-  }, [network, byId])
+  }, [network, byId, isMobile])
 
   // Highlight the selected supplier and its neighbours.
   useEffect(() => {
@@ -119,7 +123,7 @@ export function NetworkGraph({ network, regionNames }: { network: BidderNetwork;
   return (
     <div className="grid lg:grid-cols-[1fr_20rem]">
       <div className="border-t lg:border-r">
-        <div className="flex flex-wrap items-center gap-3 px-5 py-3">
+        <div className="flex flex-wrap items-center gap-3 px-4 py-3">
           <div className="relative w-full max-w-xs">
             <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
             <Input
@@ -160,7 +164,7 @@ export function NetworkGraph({ network, regionNames }: { network: BidderNetwork;
             <li>Node size = tenders · line = shared bidding</li>
           </ul>
         </div>
-        <div ref={elRef} className="h-[460px] w-full" role="img" aria-label="Bidder network graph" />
+        <div ref={elRef} className="h-85 w-full sm:h-115" role="img" aria-label="Bidder network graph" />
       </div>
 
       <aside className="border-t p-5">
@@ -176,7 +180,7 @@ export function NetworkGraph({ network, regionNames }: { network: BidderNetwork;
               </button>
             </div>
             <div className="flex items-center gap-3">
-              <span className="text-3xl font-bold tabular-nums">{supplier.risk}</span>
+              <span className="text-2xl font-semibold tabular-nums">{supplier.risk}</span>
               <span className={cn("rounded-full px-2 py-0.5 text-xs font-semibold", BAND[supplier.band].badge)}>
                 {BAND[supplier.band].label}
               </span>
@@ -188,7 +192,7 @@ export function NetworkGraph({ network, regionNames }: { network: BidderNetwork;
               <p className="mb-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase">Linked suppliers</p>
               <ul className="space-y-2">
                 {links.map((l) => (
-                  <li key={l.other.id} className="rounded-md p-2 text-sm ring-1 ring-foreground/10">
+                  <li key={l.other.id} className="rounded-md p-2 text-sm border border-gray-200">
                     <button type="button" className="font-medium hover:underline" onClick={() => setSelected(l.other.id)}>
                       {l.other.name}
                     </button>

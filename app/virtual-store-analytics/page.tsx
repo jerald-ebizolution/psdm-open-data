@@ -39,10 +39,10 @@ export default async function VirtualStoreAnalytics({ searchParams }: { searchPa
   return (
     <div className="flex flex-col gap-5">
       {/* Header, filters, headline figure and KPIs */}
-      <Card className="gap-5 p-5">
+      <Card className="gap-4 p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-[#313D85] sm:text-3xl">Virtual Store Analytics</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-[#313D85]">Virtual Store Analytics</h1>
             <p className="text-sm text-muted-foreground">
               Store purchases, delivery orders, utilization, unmet demand and price benchmarking.
             </p>
@@ -65,10 +65,10 @@ export default async function VirtualStoreAnalytics({ searchParams }: { searchPa
         </div>
 
         {/* Headline figure */}
-        <div className="flex flex-wrap items-end gap-x-8 gap-y-3 rounded-xl bg-orange-50 px-5 py-4">
+        <div className="flex flex-wrap items-end gap-x-8 gap-y-3 rounded-lg bg-orange-50 px-4 py-4">
           <div>
             <p className="text-sm font-medium text-orange-900">Total purchases, FY {fy}</p>
-            <p className="text-5xl font-bold tracking-tight text-orange-800 tabular-nums">{pesoCompact(s.purchases)}</p>
+            <p className="text-2xl font-semibold tracking-tight text-orange-800 sm:text-3xl tabular-nums">{pesoCompact(s.purchases)}</p>
           </div>
           <div className="pb-1 text-sm">
             {s.purchasesPriorYear > 0 && <Delta value={change(s.purchases, s.purchasesPriorYear)} label="vs last year" />}
@@ -112,7 +112,7 @@ export default async function VirtualStoreAnalytics({ searchParams }: { searchPa
                   return (
                     <tr key={row.region} className={cn(filter.region && !active && "opacity-40")}>
                       <th className="pr-2 text-left font-medium whitespace-nowrap">
-                        <Link href={link({ region: active ? null : row.region })} scroll={false} className={cn("hover:underline", active && "font-bold text-orange-800")}>
+                        <Link href={link({ region: active ? null : row.region })} scroll={false} className={cn("hover:underline", active && "font-semibold text-orange-800")}>
                           {regionNames[row.region] ?? row.region}
                         </Link>
                       </th>
@@ -155,9 +155,9 @@ export default async function VirtualStoreAnalytics({ searchParams }: { searchPa
             xKey="month"
             height={280}
             series={[
-              { key: "ordered", label: "Ordered", color: ORANGE },
-              { key: "fulfilled", label: "Fulfilled", color: "#fb923c" },
-              { key: "outOfStock", label: "Out of stock", color: "#6b7280" },
+              { key: "ordered", label: "Ordered", color: "#0088FE" },
+              { key: "fulfilled", label: "Fulfilled", color: "#00C49F" },
+              { key: "outOfStock", label: "Out of stock", color: "#FF8042" },
             ]}
           />
         </SectionCard>
@@ -194,7 +194,7 @@ export default async function VirtualStoreAnalytics({ searchParams }: { searchPa
                   <li key={u.id} className="flex gap-3">
                     <span
                       className={cn(
-                        "mt-0.5 h-fit rounded px-1.5 py-0.5 font-mono text-[10px] font-bold",
+                        "mt-0.5 h-fit rounded px-1.5 py-0.5 font-mono text-[10px] font-semibold",
                         u.source === "IAR" ? "bg-orange-100 text-orange-800" : "bg-slate-200 text-slate-800"
                       )}
                     >

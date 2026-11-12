@@ -30,7 +30,7 @@ export function ItemsTable({ items }: { items: CatalogueItemStats[] }) {
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3">
         <div className="relative w-full max-w-xs">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
           <Input
@@ -57,19 +57,19 @@ export function ItemsTable({ items }: { items: CatalogueItemStats[] }) {
         <Table>
           <TableHeader className="sticky top-0 z-10 bg-card">
             <TableRow>
-              <TableHead className="w-8 pl-5">#</TableHead>
+              <TableHead className="w-8 pl-4">#</TableHead>
               <TableHead>Item</TableHead>
               <TableHead className="w-[22%]">Orders</TableHead>
               <TableHead className="text-right">Quantity</TableHead>
               <TableHead className="text-right">Value</TableHead>
               <TableHead className="text-right">Catalogue price</TableHead>
-              <TableHead className="pr-5 text-right">Savings</TableHead>
+              <TableHead className="pr-4 text-right">Savings</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.map((i, n) => (
               <TableRow key={i.code}>
-                <TableCell className="pl-5 text-muted-foreground tabular-nums">{n + 1}</TableCell>
+                <TableCell className="pl-4 text-muted-foreground tabular-nums">{n + 1}</TableCell>
                 <TableCell className="whitespace-normal">
                   <p className="font-medium">{i.name}</p>
                   <p className="font-mono text-xs text-muted-foreground">UNSPSC {i.code}</p>
@@ -87,7 +87,7 @@ export function ItemsTable({ items }: { items: CatalogueItemStats[] }) {
                 </TableCell>
                 <TableCell className="text-right tabular-nums">{compact.format(i.value)}</TableCell>
                 <TableCell className="text-right tabular-nums">{unit.format(i.catalogue)}</TableCell>
-                <TableCell className="pr-5 text-right">
+                <TableCell className="pr-4 text-right">
                   {i.savings ? (
                     <span className="font-semibold text-emerald-700 tabular-nums" title={`Open-market reference ${unit.format(i.reference!)}`}>
                       {Math.round(i.savings.rate * 100)}%

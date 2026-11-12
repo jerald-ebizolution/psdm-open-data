@@ -1,7 +1,8 @@
 import { CalendarClock, Send } from "lucide-react"
 import Link from "next/link"
 
-import { ColumnChart, SERIES } from "@/components/analytics/charts"
+import { ColumnChart } from "@/components/analytics/charts"
+import { SERIES } from "@/components/analytics/palette"
 import { FilterBar } from "@/components/analytics/filter-bar"
 import {
   BarList,
@@ -76,10 +77,10 @@ export default async function GovernmentAgencyAnalytics({ searchParams }: { sear
   return (
     <div className="flex flex-col gap-5">
       {/* Header, filters and key figures (03-A) */}
-      <Card className="gap-5 p-5">
+      <Card className="gap-4 p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-[#313D85] sm:text-3xl">Government Agency Analytics</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-[#313D85]">Government Agency Analytics</h1>
             <p className="text-sm text-muted-foreground">
               Registered agencies, Annual Procurement Plans and budgets, centralized and decentralized buyers, and
               report compliance.
@@ -136,7 +137,7 @@ export default async function GovernmentAgencyAnalytics({ searchParams }: { sear
         <SectionCard title="Planned vs. Actual Orders" description="Common-use supply orders placed against the APP-CSE">
           <div className="mb-4 flex items-end justify-between gap-3">
             <div>
-              <p className="text-3xl font-bold tabular-nums">{pct(execution)}</p>
+              <p className="text-2xl font-semibold tabular-nums">{pct(execution)}</p>
               <p className="text-xs text-muted-foreground">of planned orders placed</p>
             </div>
             <div className="text-right text-xs text-muted-foreground">
@@ -155,7 +156,7 @@ export default async function GovernmentAgencyAnalytics({ searchParams }: { sear
             height={200}
             series={[
               { key: "planned", label: "Planned", color: SERIES.muted },
-              { key: "actual", label: "Actual", color: "#0f766e" },
+              { key: "actual", label: "Actual", color: SERIES.aqua },
             ]}
           />
         </SectionCard>
@@ -164,16 +165,16 @@ export default async function GovernmentAgencyAnalytics({ searchParams }: { sear
           <p className="mb-2 text-xs font-medium text-muted-foreground">Agencies</p>
           <SplitBar
             parts={[
-              { label: "Centralized (via PS-DBM)", value: s.buyers.centralized.agencies, color: "#0f766e" },
-              { label: "Decentralized", value: s.buyers.decentralized.agencies, color: "#5eead4" },
+              { label: "Centralized (via PS-DBM)", value: s.buyers.centralized.agencies, color: SERIES.aqua },
+              { label: "Decentralized", value: s.buyers.decentralized.agencies, color: SERIES.blue },
             ]}
           />
           <p className="mt-5 mb-2 text-xs font-medium text-muted-foreground">APP budget</p>
           <SplitBar
-            valueFormatter={pesoCompact}
+            format="peso"
             parts={[
-              { label: "Centralized (via PS-DBM)", value: s.buyers.centralized.budget, color: "#0f766e" },
-              { label: "Decentralized", value: s.buyers.decentralized.budget, color: "#5eead4" },
+              { label: "Centralized (via PS-DBM)", value: s.buyers.centralized.budget, color: SERIES.aqua },
+              { label: "Decentralized", value: s.buyers.decentralized.budget, color: SERIES.blue },
             ]}
           />
         </SectionCard>
@@ -232,9 +233,9 @@ export default async function GovernmentAgencyAnalytics({ searchParams }: { sear
                 </div>
                 <SplitBar
                   parts={[
-                    { label: "Submitted on time", value: counts.onTime, color: "#0f766e" },
-                    { label: "Submitted late", value: counts.late, color: "#eda100" },
-                    { label: "Not submitted", value: counts.missing, color: "#e34948" },
+                    { label: "Submitted on time", value: counts.onTime, color: SERIES.aqua },
+                    { label: "Submitted late", value: counts.late, color: SERIES.yellow },
+                    { label: "Not submitted", value: counts.missing, color: SERIES.orange },
                     ...(notRequired !== null
                       ? [{ label: "Not required (decentralized)", value: notRequired, color: "#d1d5db" }]
                       : []),
@@ -267,11 +268,11 @@ export default async function GovernmentAgencyAnalytics({ searchParams }: { sear
             data={s.registrationsByYear}
             xKey="year"
             height={260}
-            series={[{ key: "agencies", label: "Agencies", color: "#0f766e" }]}
+            series={[{ key: "agencies", label: "Agencies", color: SERIES.aqua }]}
           />
         </SectionCard>
         <SectionCard className="lg:col-span-2" title="Agencies by Type">
-          <BarList items={s.byType.map((t) => ({ label: t.label, value: t.value }))} color="bg-[#0f766e]" />
+          <BarList items={s.byType.map((t) => ({ label: t.label, value: t.value }))} color={SERIES.aqua} label="Agencies" />
         </SectionCard>
       </div>
 
@@ -297,7 +298,7 @@ export default async function GovernmentAgencyAnalytics({ searchParams }: { sear
                     )}
                   >
                     <p className="truncate text-xs font-semibold">{regionNames[r.code]}</p>
-                    <p className="text-lg font-bold tabular-nums">{formatCount(r.agencies)}</p>
+                    <p className="text-base font-semibold tabular-nums">{formatCount(r.agencies)}</p>
                   </Link>
                 </li>
               )
