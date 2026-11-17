@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { cn } from "@/lib/utils"
 
 const ALL = "all"
 
@@ -57,7 +58,7 @@ export function FilterBar({
 
   const yearSelect = (label: string, value: number, years: number[], onChange: (y: number) => void) => (
     <Select value={String(value)} onValueChange={(v) => onChange(Number(v))} disabled={isPending}>
-      <SelectTrigger className="w-28 bg-white" aria-label={label}>
+      <SelectTrigger className="w-28 bg-white max-sm:w-full" aria-label={label}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
@@ -71,10 +72,16 @@ export function FilterBar({
   )
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      {isPending && <Loader2 className="size-4 animate-spin text-muted-foreground" aria-label="Loading" />}
+    // Phones: a two-column grid of full-width dropdowns. Tablet and up: one wrapping row.
+    <div
+      className={cn(
+        "grid w-full grid-cols-2 gap-2 transition-opacity sm:flex sm:w-auto sm:flex-wrap sm:items-center",
+        isPending && "max-sm:opacity-60"
+      )}
+    >
+      {isPending && <Loader2 className="size-4 animate-spin text-muted-foreground max-sm:hidden" aria-label="Loading" />}
       {yearRange ? (
-        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+        <div className="col-span-2 flex items-center gap-1.5 text-sm text-muted-foreground">
           {yearSelect("From year", yearRange.from, yearRange.years, (y) =>
             set({ from: String(y), ...(y > yearRange.to && { to: String(y) }) })
           )}
@@ -86,7 +93,7 @@ export function FilterBar({
       ) : (
         fiscalYear !== undefined && (
           <Select value={String(fiscalYear)} onValueChange={(v) => set({ fy: v })} disabled={isPending}>
-            <SelectTrigger className="w-32 bg-white" aria-label="Fiscal year">
+            <SelectTrigger className="w-32 bg-white max-sm:w-full" aria-label="Fiscal year">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -106,7 +113,7 @@ export function FilterBar({
           onValueChange={(v) => set({ [s.param]: v === ALL ? null : v })}
           disabled={isPending}
         >
-          <SelectTrigger className={s.className ?? "w-40 bg-white"} aria-label={s.label}>
+          <SelectTrigger className={cn(s.className ?? "w-40 bg-white", "max-sm:w-full")} aria-label={s.label}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

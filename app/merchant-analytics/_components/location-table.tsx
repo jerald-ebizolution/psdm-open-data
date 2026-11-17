@@ -28,7 +28,7 @@ export function LocationTable({
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3">
         <div className="relative w-full max-w-xs">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
           <Input
@@ -55,25 +55,25 @@ export function LocationTable({
           <Download /> Export CSV
         </Button>
       </div>
-      <div className="max-h-[420px] overflow-y-auto border-t">
+      <div className="max-h-105 overflow-y-auto border-t">
         <Table>
           <TableHeader className="sticky top-0 bg-card">
             <TableRow>
-              <TableHead className="pl-5">Barangay</TableHead>
+              <TableHead className="pl-4">Barangay</TableHead>
               <TableHead>City / Municipality</TableHead>
               <TableHead>Province</TableHead>
               <TableHead>Region</TableHead>
-              <TableHead className="pr-5 text-right">Suppliers</TableHead>
+              <TableHead className="pr-4 text-right">Suppliers</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.map((l) => (
               <TableRow key={`${l.city}-${l.barangay}`}>
-                <TableCell className="pl-5 font-medium">{l.barangay}</TableCell>
+                <TableCell className="pl-4 font-medium">{l.barangay}</TableCell>
                 <TableCell>{l.city}</TableCell>
                 <TableCell className="text-muted-foreground">{l.province}</TableCell>
                 <TableCell className="text-muted-foreground">{regionNames[l.region] ?? l.region}</TableCell>
-                <TableCell className="pr-5 text-right font-medium tabular-nums">{formatCount(l.suppliers)}</TableCell>
+                <TableCell className="pr-4 text-right font-medium tabular-nums">{formatCount(l.suppliers)}</TableCell>
               </TableRow>
             ))}
             {!rows.length && (

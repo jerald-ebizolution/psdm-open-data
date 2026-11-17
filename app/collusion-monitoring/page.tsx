@@ -35,10 +35,10 @@ export default async function CollusionMonitoring({ searchParams }: { searchPara
   return (
     <div className="flex flex-col gap-5">
       {/* Header, filters, key figures */}
-      <Card className="gap-5 p-5">
+      <Card className="gap-4 p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-[#313D85] sm:text-3xl">Collusion Monitoring</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-[#313D85]">Collusion Monitoring</h1>
             <p className="text-sm text-muted-foreground">
               Bidder networks, bid rotation, price clustering and market concentration.
             </p>
@@ -94,7 +94,7 @@ export default async function CollusionMonitoring({ searchParams }: { searchPara
               const max = Math.max(1, ...network.signalCounts.map((x) => x.pairs))
               const def = SIGNALS.find((x) => x.key === s.key)!
               return (
-                <li key={s.key} className="grid grid-cols-[minmax(9rem,38%)_1fr_auto] items-center gap-3 text-sm" title={def.description}>
+                <li key={s.key} className="grid grid-cols-[minmax(8rem,48%)_1fr_auto] items-center gap-2 sm:grid-cols-[minmax(9rem,38%)_1fr_auto] sm:gap-3 text-sm" title={def.description}>
                   <span>
                     {s.label}
                     <span className="block text-xs text-muted-foreground">{def.description}</span>
@@ -111,9 +111,9 @@ export default async function CollusionMonitoring({ searchParams }: { searchPara
 
         <div className="flex flex-col gap-5">
           <SectionCard title="Overall Risk Score" description="Weighted by tenders across detected patterns">
-            <p className={cn("text-4xl font-bold tabular-nums", risk >= 0.6 ? "text-red-700" : risk >= 0.35 ? "text-amber-600" : "text-indigo-900")}>
+            <p className={cn("text-2xl font-semibold tabular-nums", risk >= 0.6 ? "text-red-700" : risk >= 0.35 ? "text-amber-600" : "text-indigo-900")}>
               {Math.round(risk * 100)}
-              <span className="text-lg font-semibold text-muted-foreground"> / 100</span>
+              <span className="text-base font-semibold text-muted-foreground"> / 100</span>
             </p>
             <div className="mt-3 h-2.5 overflow-hidden rounded-full bg-muted">
               <div
@@ -136,15 +136,15 @@ export default async function CollusionMonitoring({ searchParams }: { searchPara
         description="Rotation patterns per agency · expand a row to see who won each tender"
         flush
       >
-        <div className="grid gap-5 px-5 pb-5 md:grid-cols-2">
+        <div className="grid gap-5 px-4 pb-5 md:grid-cols-2">
           <div>
             <p className="mb-2 text-sm font-semibold">Patterns found</p>
-            <BarList items={rotation.patterns} color="bg-red-600" />
+            <BarList items={rotation.patterns} color="#FF8042" label="Count" />
           </div>
           <div>
             <p className="mb-2 text-sm font-semibold">Market concentration</p>
             <p className="text-sm">
-              <span className="text-2xl font-bold tabular-nums">{pct(concentrated / Math.max(1, rotation.cases.length), 0)}</span>{" "}
+              <span className="text-xl font-semibold tabular-nums">{pct(concentrated / Math.max(1, rotation.cases.length), 0)}</span>{" "}
               <span className="text-muted-foreground">
                 of flagged agency markets are highly concentrated (HHI above 2,500)
               </span>
@@ -158,7 +158,7 @@ export default async function CollusionMonitoring({ searchParams }: { searchPara
         <RotationTable key={`${filter.fromYear}-${filter.toYear}-${filter.region}-${filter.agencyType}`} cases={rotation.cases} regionNames={regionNames} />
       </SectionCard>
 
-      <p className="rounded-xl bg-white/60 px-5 py-3 text-xs text-muted-foreground ring-1 ring-foreground/5">
+      <p className="rounded-lg bg-white/60 px-4 py-3 text-xs text-muted-foreground ring-1 ring-foreground/5">
         Graphs on this page are published only where approved. Narrative findings remain internal.
       </p>
       <SampleDataNote />

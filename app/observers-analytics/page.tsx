@@ -78,10 +78,10 @@ export default async function ObserversAnalytics({ searchParams }: { searchParam
   return (
     <div className="flex flex-col gap-5">
       {/* Header, filters, status slicers, key figures */}
-      <Card className="gap-5 p-5">
+      <Card className="gap-4 p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold text-[#313D85] sm:text-3xl">Observers Analytics</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-[#313D85]">Observers Analytics</h1>
             <p className="text-sm text-muted-foreground">
               Procurement red flags, risk severity, cross-agency price gaps and agency compliance.
             </p>
@@ -160,7 +160,7 @@ export default async function ObserversAnalytics({ searchParams }: { searchParam
                         <td
                           key={l}
                           title={`${impact} impact · ${l}: ${n} cases (${SEVERITY[sev].label})`}
-                          className="h-12 rounded-md text-center text-sm font-bold tabular-nums"
+                          className="h-12 rounded-md text-center text-sm font-semibold tabular-nums"
                           style={{
                             background: SEVERITY[sev].color,
                             opacity: n ? 0.35 + 0.65 * (n / maxCell) : 0.15,
@@ -262,7 +262,7 @@ export default async function ObserversAnalytics({ searchParams }: { searchParam
                     )}
                   >
                     <p className="truncate text-xs font-semibold">{regionNames[r.code]}</p>
-                    <p className="text-lg font-bold tabular-nums">{r.per100.toFixed(1)}</p>
+                    <p className="text-base font-semibold tabular-nums">{r.per100.toFixed(1)}</p>
                   </Link>
                 </li>
               )
@@ -291,19 +291,19 @@ export default async function ObserversAnalytics({ searchParams }: { searchParam
           flush
         >
           <div className="overflow-x-auto border-t">
-            <table className="w-full text-sm">
+            <table className="w-full min-w-[520px] text-sm">
               <thead>
                 <tr className="text-left text-xs text-muted-foreground">
-                  <th className="py-2 pl-5 font-medium">Item</th>
+                  <th className="py-2 pl-4 font-medium">Item</th>
                   <th className="py-2 text-right font-medium">Median</th>
                   <th className="py-2 text-right font-medium">Range</th>
-                  <th className="py-2 pr-5 text-right font-medium">Highest vs. median</th>
+                  <th className="py-2 pr-4 text-right font-medium">Highest vs. median</th>
                 </tr>
               </thead>
               <tbody>
                 {prices.map((p) => (
                   <tr key={p.item} className="border-t align-top">
-                    <td className="py-2 pl-5">
+                    <td className="py-2 pl-4">
                       <p className="font-medium">{p.item}</p>
                       <p className="text-xs text-muted-foreground">
                         per {p.unit} · {p.agencies} agencies · highest: {p.highest[0]?.agency}
@@ -313,10 +313,10 @@ export default async function ObserversAnalytics({ searchParams }: { searchParam
                     <td className="py-2 text-right text-muted-foreground tabular-nums">
                       {peso(p.min)} – {peso(p.max)}
                     </td>
-                    <td className="py-2 pr-5 text-right">
+                    <td className="py-2 pr-4 text-right">
                       <span
                         className={cn(
-                          "rounded-full px-2 py-0.5 text-xs font-bold tabular-nums",
+                          "rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums",
                           p.disparity > 0.5 ? "bg-red-100 text-red-800" : "bg-muted text-muted-foreground"
                         )}
                       >
@@ -328,12 +328,12 @@ export default async function ObserversAnalytics({ searchParams }: { searchParam
               </tbody>
             </table>
           </div>
-          <p className="border-t px-5 py-3 text-xs text-muted-foreground">Prices more than 50% above the median raise flag PD.</p>
+          <p className="border-t px-4 py-3 text-xs text-muted-foreground">Prices more than 50% above the median raise flag PD.</p>
         </SectionCard>
 
         <SectionCard className="lg:col-span-2" title="Award Concentration" description="Agencies where one supplier won most of the contract value">
           <p className="mb-3 text-sm">
-            <span className="text-2xl font-bold tabular-nums">{pct(concentration.concentratedShare)}</span>{" "}
+            <span className="text-xl font-semibold tabular-nums">{pct(concentration.concentratedShare)}</span>{" "}
             <span className="text-muted-foreground">of agencies gave over half their contract value to one supplier</span>
           </p>
           <ol className="divide-y text-sm">
@@ -369,9 +369,9 @@ export default async function ObserversAnalytics({ searchParams }: { searchParam
               ["Accuracy", compliance.averages.accuracy],
             ] as const
           ).map(([label, value], i) => (
-            <div key={label} className={cn("rounded-xl px-4 py-3 ring-1 ring-foreground/10", i === 0 && "bg-[#313D85]/5")}>
+            <div key={label} className={cn("rounded-lg px-4 py-3 border border-gray-200", i === 0 && "bg-[#313D85]/5")}>
               <p className="text-sm font-medium">{label}</p>
-              <p className="mt-1 text-3xl font-bold tabular-nums">{pct(value, 0)}</p>
+              <p className="mt-1 text-2xl font-semibold tabular-nums">{pct(value, 0)}</p>
               <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted">
                 <div
                   className={cn("h-full rounded-full", value < COMPLETENESS_FLOOR ? "bg-red-600" : value < 0.75 ? "bg-amber-500" : "bg-[#0f766e]")}
@@ -394,9 +394,9 @@ export default async function ObserversAnalytics({ searchParams }: { searchParam
                   ) : (
                     <SplitBar
                       parts={[
-                        { label: "On time", value: p.onTime, color: "#0f766e" },
-                        { label: "Late", value: p.late, color: "#eda100" },
-                        { label: "Not submitted", value: p.missing, color: "#e34948" },
+                        { label: "On time", value: p.onTime, color: "#00C49F" },
+                        { label: "Late", value: p.late, color: "#FFBB28" },
+                        { label: "Not submitted", value: p.missing, color: "#FF8042" },
                       ]}
                     />
                   )}
@@ -408,7 +408,7 @@ export default async function ObserversAnalytics({ searchParams }: { searchParam
             <div className="mb-1 flex flex-wrap items-baseline justify-between gap-2">
               <p className="text-sm font-semibold">Awards Within 60 Calendar Days</p>
               <p className="text-sm">
-                <span className="font-bold tabular-nums">{pct(compliance.awardsWithin60)}</span>{" "}
+                <span className="font-semibold tabular-nums">{pct(compliance.awardsWithin60)}</span>{" "}
                 <span className="text-muted-foreground">of awards on time</span>
               </p>
             </div>
@@ -418,8 +418,8 @@ export default async function ObserversAnalytics({ searchParams }: { searchParam
               stacked
               height={240}
               series={[
-                { key: "within", label: "Within 60 days", color: "#0f766e" },
-                { key: "over", label: "Over 60 days", color: "#dc2626" },
+                { key: "within", label: "Within 60 days", color: "#00C49F" },
+                { key: "over", label: "Over 60 days", color: "#FF8042" },
               ]}
             />
           </div>

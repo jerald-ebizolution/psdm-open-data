@@ -11,6 +11,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { SIDEBAR_DATA } from "@/lib/side-bar-menus"
 import { ChevronRight } from "lucide-react"
@@ -21,6 +22,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./collapsib
 
 export function AppSidebar() {
   const pathName = usePathname()
+  const { isMobile, setOpenMobile } = useSidebar()
 
   const isPathActive = (url: string) => {
     if (url && pathName === url) {
@@ -33,14 +35,19 @@ export function AppSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <p className="flex items-center gap-3 text-md font-medium tracking-wide text-muted-foreground uppercase ">
-              <Image src="/philgeps-logo.png" alt="PSDBM Logo" width={70} height={70} />
+            <p className="flex items-center gap-2.5 px-1 py-1.5 text-xs font-semibold tracking-wider text-gray-700 uppercase">
+              <Image src="/philgeps-logo.png" alt="PSDBM Logo" width={36} height={36} />
               PSDBM Open Data
             </p>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent
+        // On mobile the sidebar is a drawer: close it once a page link is tapped.
+        onClickCapture={(e) => {
+          if (isMobile && (e.target as HTMLElement).closest("a[href]")) setOpenMobile(false)
+        }}
+      >
 
         {
           SIDEBAR_DATA.navMain.admin.map((group) => (
@@ -56,17 +63,17 @@ export function AppSidebar() {
                   if (hasSubItems) {
                     const isSubGroupActive = item.subItems?.some((subItem) => subItem.subItems?.some((subSubItem) => isPathActive(subSubItem.url)));
                     return (
-                      <SidebarMenuItem key={item.title} className="mb-2">
+                      <SidebarMenuItem key={item.title} className="mb-0.5">
                         <Collapsible
                           defaultOpen={isSubGroupActive}
                           className="group/collapsible"
                         >
                           <CollapsibleTrigger asChild>
                             <SidebarMenuButton
-                              className={`py-5 text-[#545A6D] hover:text-[#313D85]! ${isSubGroupActive && "text-[#313D85]"}`}
+                              className={`h-9 text-[12px] text-[#545A6D] hover:text-[#313D85]! ${isSubGroupActive && "bg-[#313D85]/[0.07] font-medium text-[#313D85]"}`}
                             >
                               <ItemIcon />
-                              <span className="">{item.title}</span>
+                              <span className="text-[12px]">{item.title}</span>
                               <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                             </SidebarMenuButton>
                           </CollapsibleTrigger>
@@ -82,10 +89,10 @@ export function AppSidebar() {
                                     >
                                       <CollapsibleTrigger asChild>
                                         <SidebarMenuSubButton 
-                                          className={`py-5 text-[#545A6D] hover:text-[#313D85]! ${isSubGroupActive && "text-[#313D85]"}`}
+                                          className={`h-9 text-[12px] text-[#545A6D] hover:text-[#313D85]! ${isSubGroupActive && "bg-[#313D85]/[0.07] font-medium text-[#313D85]"}`}
                                         >
                                           <SubItemIcon className="shrink-0" />
-                                          <span className="">{subItem.title}</span>
+                                          <span className="text-[12px]">{subItem.title}</span>
                                           <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                                         </SidebarMenuSubButton>
                                       </CollapsibleTrigger>
@@ -97,11 +104,11 @@ export function AppSidebar() {
                                               <SidebarMenuSubItem className="mt-1" key={subSubItem.title}>
                                                 <SidebarMenuSubButton
                                                   asChild
-                                                  className={`py-5 text-[#545A6D] hover:text-[#313D85]! ${isPathActive(subSubItem.url) && "text-[#313D85]"}`}
+                                                  className={`h-9 text-[12px] text-[#545A6D] hover:text-[#313D85]! ${isPathActive(subSubItem.url) && "bg-[#313D85]/[0.07] font-medium text-[#313D85]"}`}
                                                 >
                                                   <Link href={`${subSubItem.url || ""}`}>
                                                     <SubSubItemIcon className="shrink-0" />
-                                                    <span className="">{subSubItem.title}</span>
+                                                    <span className="text-[12px]">{subSubItem.title}</span>
                                                   </Link>
                                                 </SidebarMenuSubButton>
                                               </SidebarMenuSubItem>
@@ -124,13 +131,13 @@ export function AppSidebar() {
                     return null
                   }
                   return (
-                    <SidebarMenuItem key={item.title} className="mb-2">
+                    <SidebarMenuItem key={item.title} className="mb-0.5">
                       <SidebarMenuButton
                         asChild
-                        className={`py-5 text-[#545A6D] hover:text-[#313D85]! ${isPathActive(item.url || '') && "text-[#313D85]"}`}
+                        className={`h-9 text-[12px] text-[#545A6D] hover:text-[#313D85]! ${isPathActive(item.url || '') && "bg-[#313D85]/[0.07] font-medium text-[#313D85]"}`}
                       >
                         <Link href={item.url || ""} >
-                          <item.icon size={30} className="text-xl " />
+                          <item.icon />
                           <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>

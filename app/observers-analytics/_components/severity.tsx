@@ -14,7 +14,7 @@ export const SEVERITY_ORDER: Severity[] = ["critical", "high", "medium", "low"]
 export function SeverityBadge({ severity, className }: { severity: Severity; className?: string }) {
   const s = SEVERITY[severity]
   return (
-    <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-bold tracking-wide uppercase", s.badge, className)}>
+    <span className={cn("rounded-full px-2 py-0.5 text-[11px] font-semibold tracking-wide uppercase", s.badge, className)}>
       {s.label}
     </span>
   )

@@ -51,7 +51,7 @@ export function FlagCasesTable({
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3">
         <div className="relative w-full max-w-xs">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
           <Input
@@ -117,19 +117,19 @@ export function FlagCasesTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="pl-5">Flag</TableHead>
+              <TableHead className="pl-4">Flag</TableHead>
               <TableHead>Project</TableHead>
               <TableHead className="text-right">Amount</TableHead>
               <TableHead>Detected</TableHead>
               <TableHead>Severity</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="pr-5">Source</TableHead>
+              <TableHead className="pr-4">Source</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {visible.map((c) => (
               <TableRow key={c.id}>
-                <TableCell className="pl-5">
+                <TableCell className="pl-4">
                   <span className="rounded bg-red-50 px-1.5 py-0.5 font-mono text-xs font-semibold text-red-800">{c.flag}</span>
                 </TableCell>
                 <TableCell className="max-w-96 whitespace-normal">
@@ -144,7 +144,7 @@ export function FlagCasesTable({
                   <SeverityBadge severity={c.severity} />
                 </TableCell>
                 <TableCell className="whitespace-nowrap text-sm">{statusName[c.status]}</TableCell>
-                <TableCell className="pr-5">
+                <TableCell className="pr-4">
                   {c.source.external ? (
                     <a href={c.source.url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm text-[#2a78d6] hover:underline">
                       {c.source.label} <ExternalLink className="size-3" />
@@ -168,7 +168,7 @@ export function FlagCasesTable({
         </Table>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t px-4 py-3">
         <p className="text-sm text-muted-foreground">
           {rows.length
             ? `Showing ${(current - 1) * PAGE_SIZE + 1}–${(current - 1) * PAGE_SIZE + visible.length} of ${rows.length} cases, newest first`
